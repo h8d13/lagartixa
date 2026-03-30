@@ -281,23 +281,29 @@ useradd -m -s /bin/bash -G wheel "$TARGET_USER"
 echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
-# Init-specific NetworkManager package
-case "$TARGET_INI" in
-    openrc)
-        pacman -S --noconfirm networkmanager-openrc
-        rc-update add NetworkManager default
+# Network setup
+case "$NETWORK" in
+    nm|nm-iwd)
+        case "$TARGET_INI" in
+            openrc) pacman -S --noconfirm networkmanager-openrc; rc-update add NetworkManager default ;;
+            runit)  pacman -S --noconfirm networkmanager-runit;  ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/ ;;
+            s6)     pacman -S --noconfirm networkmanager-s6;     s6-rc-bundle-update add default NetworkManager ;;
+            dinit)  pacman -S --noconfirm networkmanager-dinit;  dinitctl enable NetworkManager ;;
+        esac
+        if [ "$NETWORK" = "nm-iwd" ]; then
+            pacman -S --noconfirm iwd
+            mkdir -p /etc/NetworkManager/conf.d
+            printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi-backend.conf
+        fi
         ;;
-    runit)
-        pacman -S --noconfirm networkmanager-runit
-        ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
-        ;;
-    s6)
-        pacman -S --noconfirm networkmanager-s6
-        s6-rc-bundle-update add default NetworkManager
-        ;;
-    dinit)
-        pacman -S --noconfirm networkmanager-dinit
-        dinitctl enable NetworkManager
+    iwd)
+        pacman -S --noconfirm iwd
+        case "$TARGET_INI" in
+            openrc) rc-update add iwd default ;;
+            runit)  ln -s /etc/runit/sv/iwd /etc/runit/runsvdir/default/ ;;
+            s6)     s6-rc-bundle-update add default iwd ;;
+            dinit)  dinitctl enable iwd ;;
+        esac
         ;;
 esac
 

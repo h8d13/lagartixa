@@ -10,7 +10,7 @@ One config file, EVERYTHING must be variables that can be matched to options, on
 
 ## Run
 
-```bash
+```shell
 sudo ./test-image.sh        # default 
 sudo losetup -d /dev/loop0  # detach loop device
 rm /tmp/artix-test.img      # reset img

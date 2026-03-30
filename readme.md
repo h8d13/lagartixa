@@ -16,6 +16,7 @@ sudo losetup -d /dev/loop0  # detach loop device
 rm /tmp/artix-test.img      # reset img
 # flash or qemu
 sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
+# resize/create new parts as needed
 ```
 
 > Careful that `dd` might look frozen but is not, is flushing (depending on how slow is your disk/pc).

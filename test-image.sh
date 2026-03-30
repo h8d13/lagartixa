@@ -4,8 +4,23 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+. "${SCRIPT_DIR}/default.conf"
+
 IMAGE_FILE="${1:-/tmp/artix-test.img}"
-IMAGE_SIZE="${2:-6G}"
+
+# Derive image size from conf: EFI + ROOT + 512MiB overhead, stripping the unit suffix
+_to_mib() {
+    local val="${1%%[A-Za-z]*}"
+    local unit="${1#"$val"}"
+    case "${unit,,}" in
+        gib|g) echo $(( val * 1024 )) ;;
+        mib|m) echo "$val" ;;
+        *)     echo $(( val * 1024 )) ;;
+    esac
+}
+_IMAGE_MIB=$(( $(_to_mib "$EFI_SIZE") + $(_to_mib "$ROOT_SIZE") + 512 ))
+IMAGE_SIZE="${2:-${_IMAGE_MIB}MiB}"
 
 [ "$(id -u)" -ne 0 ] && { echo "Must be run as root."; exit 1; }
 
@@ -19,11 +34,7 @@ LOOP_DEV=$(losetup -f --show -P "$IMAGE_FILE")
 echo "      Loop device: $LOOP_DEV"
 
 cleanup() {
-    echo "Detaching loop device..."
-    for mp in /mnt/artix/efi /mnt/artix/home /mnt/artix; do
-        mountpoint -q "$mp" 2>/dev/null && { umount -l "$mp" 2>/dev/null || true; }
-    done
-    rm -f /tmp/artix-bootstrap.sh
+    # klartix.sh owns unmounting only handle loop device and bootstrap leftovers here
     rm -rf /tmp/artix-bootstrap*
     losetup -d "$LOOP_DEV" 2>/dev/null || true
 }

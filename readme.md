@@ -2,7 +2,7 @@
 
 Dev rules: 
 
-Bash only - only use libs available in the `base` ISO or small libs. 
+Bash only - only use libs available in the `base` ISO or small libs/deps, all stated in the main script.
 No ISO needed -> bootstrap
 Target: `x86_64` UEFI.
 
@@ -24,9 +24,14 @@ sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
 
 Ressources: 
 
-TUI: https://man7.org/linux/man-pages/man1/tput.1.html
+
 AIS: https://github.com/archlinux/arch-install-scripts
 
 WIKIS: 
 https://wiki.artixlinux.org/ 
 https://wiki.gentoo.org/wiki/Main_Page
+https://gitea.artixlinux.org/artix/artix-bootstrap/
+
+Not used:
+
+TUI: https://man7.org/linux/man-pages/man1/tput.1.html

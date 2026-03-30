@@ -1,0 +1,36 @@
+#!/bin/bash
+# Test klartix.sh against a loop device image — no real disk needed
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+IMAGE_FILE="${1:-/tmp/artix-test.img}"
+IMAGE_SIZE="${2:-6G}"
+
+[ "$(id -u)" -ne 0 ] && { echo "Must be run as root."; exit 1; }
+
+# Create sparse image
+echo "[1/3] Creating sparse disk image: $IMAGE_FILE ($IMAGE_SIZE)..."
+dd if=/dev/zero of="$IMAGE_FILE" bs=1 count=0 seek="$IMAGE_SIZE" 2>/dev/null
+
+# Attach loop device
+echo "[2/3] Attaching loop device..."
+LOOP_DEV=$(losetup -f --show -P "$IMAGE_FILE")
+echo "      Loop device: $LOOP_DEV"
+
+cleanup() {
+    echo "Detaching loop device..."
+    for mp in /mnt/artix/efi /mnt/artix/home /mnt/artix; do
+        mountpoint -q "$mp" 2>/dev/null && { umount -l "$mp" 2>/dev/null || true; }
+    done
+    rm -f /tmp/artix-bootstrap.sh
+    rm -rf /tmp/artix-bootstrap*
+    losetup -d "$LOOP_DEV" 2>/dev/null || true
+}
+trap cleanup EXIT
+
+[[ "$LOOP_DEV" != /dev/loop* ]] && { echo "ERROR: $LOOP_DEV is not a loop device — aborting."; exit 1; }
+
+echo "[3/3] Launching klartix installer enter '$LOOP_DEV' as target disk"
+echo ""
+bash "$SCRIPT_DIR/klartix.sh"

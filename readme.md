@@ -10,10 +10,15 @@ One config file, EVERYTHING must be variables that can be matched to options, on
 
 ## Run
 
+```bash
 sudo ./test-image.sh        # default 
-rm /tmp/artix-test.img
+sudo losetup -d /dev/loop0  # detach loop device
+rm /tmp/artix-test.img      # reset img
+# flash or qemu
+sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
+```
 
-Flash it or test it in qemu directly.
+> Careful that `dd` might look frozen but is not, is flushing (depending on how slow is your disk/pc).
 
 ---
 
@@ -21,7 +26,7 @@ Ressources:
 
 TUI: https://man7.org/linux/man-pages/man1/tput.1.html
 AIS: https://github.com/archlinux/arch-install-scripts
+
 WIKIS: 
 https://wiki.artixlinux.org/ 
-https://wiki.archlinux.org/title/Main_page 
 https://wiki.gentoo.org/wiki/Main_Page

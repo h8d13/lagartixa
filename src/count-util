@@ -1,7 +1,3 @@
 #!/bin/bash
 # requires pacman-contrib
-
-for pkg in $(pacman -Qqe); do                                                                                                                                                                                                             
-    count=$(pactree -u "$pkg" 2>/dev/null | wc -l)                                                                                                                                                                                        
-    echo "$((count - 1)) $pkg"                                                                                                                                                                                                            
-done | sort -rn | head -20
+for p in $(pacman -Qqe); do echo "$(( $(pactree -u "$p" 2>/dev/null | wc -l) - 1 )) $p"; done | sort -rn | head -20

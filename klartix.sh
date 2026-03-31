@@ -282,7 +282,8 @@ case "$ELEV" in
     doas) printf 'permit persist :wheel\n' > /etc/doas.conf ;;
 esac
 
-# Seat management TODO: else elogind
+# Seat management 
+# this saves about 200mb of cached/RAM TODO: else elogind
 case "$TARGET_INI" in
     openrc) pacman -S --noconfirm seatd seatd-openrc; rc-update add seatd default ;;
     runit)  pacman -S --noconfirm seatd seatd-runit;  ln -s /etc/runit/sv/seatd /etc/runit/runsvdir/default/ ;;

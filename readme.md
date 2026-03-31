@@ -15,7 +15,6 @@ Testing: I mostly test from host straight, create the in a loop device, then cop
 
 ```shell
 sudo ./test-image.sh        # default 
-sudo losetup -d /dev/loop0  # detach loop device
 rm /tmp/artix-test.img      # reset img
 # flash or qemu
 sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync

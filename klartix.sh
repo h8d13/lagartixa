@@ -129,7 +129,7 @@ pacman -S $PKGS --noconfirm --needed
 # to adapt if using a different PM
 
 show_progress "Cleaning up previous installation attempts..."
-rm -rf /tmp/artix-bootstrap*
+umount -R "$TARGET_MOUNT" 2>/dev/null || true
 
 TARGET_MOUNT="/mnt/artix"
 mkdir -p "$TARGET_MOUNT"
@@ -182,19 +182,13 @@ mkdir -p "$TARGET_MOUNT/efi"
 mount "$EFI_PART" "$TARGET_MOUNT/efi"
 
 # BOOTSTRAP
-show_progress "Downloading Artix bootstrap tool..."
-cd /tmp || exit
-wget https://gitea.artixlinux.org/artix/artix-bootstrap/raw/branch/master/artix-bootstrap.sh
-
-show_progress "Setting bootstrap tool permissions..."
-chmod +x artix-bootstrap.sh
-
+BOOTSTRAP="$SCRIPT_DIR/artix-bootstrap/artix-bootstrap.sh"
 show_progress "Bootstrapping Artix Linux with $TARGET_INI..."
 if [ -n "$MIRROR_URL" ]; then
     info "Using mirror: $MIRROR_URL"
-    ./artix-bootstrap.sh -r "$MIRROR_URL" -i "$TARGET_INI" "$TARGET_MOUNT"
+    "$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" "$TARGET_MOUNT"
 else
-    ./artix-bootstrap.sh -i "$TARGET_INI" "$TARGET_MOUNT"
+    "$BOOTSTRAP" -i "$TARGET_INI" "$TARGET_MOUNT"
 fi
 
 # FSTAB
@@ -209,6 +203,17 @@ UUID=$EFI_UUID   /efi  vfat         defaults         0      2
 FSTAB
 
 # CHROOT CONFIG
+
+#   enable_svc() {                                                                                                                                                                                                                            
+#       case "$TARGET_INI" in                                                                                                                                                                                                                 
+#           openrc) rc-update add "\$1" default ;;                                                                                                                                                                                            
+#           runit)  ln -s "/etc/runit/sv/\$1" /etc/runit/runsvdir/default/ ;;                                                                                                                                                                 
+#           s6)     s6-rc-bundle-update add default "\$1" ;;                                                                                                                                                                                  
+#           dinit)  dinitctl enable "\$1" ;;                                                                                                                                                                                                  
+#       esac                                                                                                                                                                                                                                  
+#   }                                                                                                                                                                                                                                         
+# then refactor defs: same pattern for pkg pkg-initsystem
+
 show_progress "Creating chroot configuration script..."
 cat > "$TARGET_MOUNT/configure.sh" << EOF
 #!/bin/bash
@@ -261,7 +266,7 @@ echo "root:$ROOT_PASSWORD" | chpasswd
 # Kernel, bootloader & base packages
 echo "Installing kernel and base packages..."
 pacman -S --noconfirm \
-    $KERNEL linux-firmware \
+    $KERNEL $FW \
     grub mkinitcpio \
     $ELEV \
     git \
@@ -293,12 +298,20 @@ case "$NETWORK" in
         fi
         ;;
     iwd)
-        pacman -S --noconfirm iwd
+        # iwd handles WiFi only — dhcpcd covers ethernet
         case "$TARGET_INI" in
-            openrc) rc-update add iwd default ;;
-            runit)  ln -s /etc/runit/sv/iwd /etc/runit/runsvdir/default/ ;;
-            s6)     s6-rc-bundle-update add default iwd ;;
-            dinit)  dinitctl enable iwd ;;
+            openrc) pacman -S --noconfirm iwd iwd-openrc dhcpcd dhcpcd-openrc
+                    rc-update add iwd default
+                    rc-update add dhcpcd default ;;
+            runit)  pacman -S --noconfirm iwd iwd-runit dhcpcd dhcpcd-runit
+                    ln -s /etc/runit/sv/iwd   /etc/runit/runsvdir/default/
+                    ln -s /etc/runit/sv/dhcpcd /etc/runit/runsvdir/default/ ;;
+            s6)     pacman -S --noconfirm iwd iwd-s6 dhcpcd dhcpcd-s6
+                    s6-rc-bundle-update add default iwd
+                    s6-rc-bundle-update add default dhcpcd ;;
+            dinit)  pacman -S --noconfirm iwd iwd-dinit dhcpcd dhcpcd-dinit
+                    dinitctl enable iwd
+                    dinitctl enable dhcpcd ;;
         esac
         ;;
 esac
@@ -343,7 +356,7 @@ grub-mkconfig -o /efi/grub/grub.cfg
 # Lock root if configured
 if [ "$LOCK_ROOT" = "1" ]; then
     passwd -l root
-    echo "Root account locked. Use sudo from $TARGET_USER."
+    echo "Root account locked. Use $ELEV from $TARGET_USER."
 fi
 EOF
 show_progress "Making configuration script executable..."

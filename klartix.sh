@@ -212,7 +212,7 @@ FSTAB
 #           dinit)  dinitctl enable "\$1" ;;                                                                                                                                                                                                  
 #       esac                                                                                                                                                                                                                                  
 #   }                                                                                                                                                                                                                                         
-# then refactor defs: same pattern for pkg pkg-initsystem
+# then refactor defs: same pattern for pkg pkg-initsystem create one def to avoid duplication
 
 show_progress "Creating chroot configuration script..."
 cat > "$TARGET_MOUNT/configure.sh" << EOF

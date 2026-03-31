@@ -302,6 +302,19 @@ case "$NETWORK" in
         ;;
 esac
 
+# Firewall
+if [ "$USE_UFW" = "1" ]; then
+case "$TARGET_INI" in
+    openrc) pacman -S --noconfirm ufw ufw-openrc; rc-update add ufw default ;;
+    runit)  pacman -S --noconfirm ufw ufw-runit;  ln -s /etc/runit/sv/ufw /etc/runit/runsvdir/default/ ;;
+    s6)     pacman -S --noconfirm ufw ufw-s6;     s6-rc-bundle-update add default ufw ;;
+    dinit)  pacman -S --noconfirm ufw ufw-dinit;  dinitctl enable ufw ;;
+esac
+ufw default deny incoming
+ufw default allow outgoing
+ufw enable
+fi
+
 # zram swap
 mkdir -p /etc/udev/rules.d
 cat > /etc/udev/rules.d/99-zram.rules << ZRAM

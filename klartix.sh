@@ -276,7 +276,10 @@ pacman -S --noconfirm \
 # User
 useradd -m -s /bin/bash -G wheel "$TARGET_USER"
 echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+case "$ELEV" in
+    sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;
+    doas) printf 'permit persist :wheel\n' > /etc/doas.conf ;;
+esac
 
 # Network setup
 case "$NETWORK" in

@@ -266,7 +266,7 @@ pacman -S --noconfirm \
     git \
     $EDITOR
 
-[ "$K_HEADERS" = "1" ] && pacman -S --noconfirm "${KERNEL}-headers"
+[ "$_KHEADERS" = "1" ] && pacman -S --noconfirm "${KERNEL}-headers"
 
 # User
 useradd -m -s /bin/bash -G wheel "$TARGET_USER"

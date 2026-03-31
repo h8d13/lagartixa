@@ -275,12 +275,36 @@ pacman -S --noconfirm \
 [ "$_KHEADERS" = "1" ] && pacman -S --noconfirm "${KERNEL}-headers"
 
 # User
-useradd -m -s /bin/bash -G wheel "$TARGET_USER"
+useradd -m -s /bin/bash -G wheel,seat "$TARGET_USER"
 echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
 case "$ELEV" in
     sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;
     doas) printf 'permit persist :wheel\n' > /etc/doas.conf ;;
 esac
+
+# Seat management TODO: else elogind
+case "$TARGET_INI" in
+    openrc) pacman -S --noconfirm seatd seatd-openrc; rc-update add seatd default ;;
+    runit)  pacman -S --noconfirm seatd seatd-runit;  ln -s /etc/runit/sv/seatd /etc/runit/runsvdir/default/ ;;
+    s6)     pacman -S --noconfirm seatd seatd-s6;     s6-rc-bundle-update add default seatd ;;
+    dinit)  pacman -S --noconfirm seatd seatd-dinit;  dinitctl enable seatd ;;
+esac
+
+# XDG_RUNTIME_DIR create per-user dir at boot, export at login
+mkdir -p /etc/local.d
+cat > /etc/local.d/xdg-runtime.start << LOCALD
+#!/bin/sh
+uid=\$(id -u $TARGET_USER)
+mkdir -p /run/user/\$uid
+chown $TARGET_USER:$TARGET_USER /run/user/\$uid
+chmod 0700 /run/user/\$uid
+LOCALD
+chmod +x /etc/local.d/xdg-runtime.start
+rc-update add local default
+
+cat > /etc/profile.d/xdg-runtime-dir.sh << 'XDG'
+export XDG_RUNTIME_DIR="/run/user/\$(id -u)"
+XDG
 
 # Network setup
 case "$NETWORK" in

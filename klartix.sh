@@ -54,14 +54,7 @@ cleanup() {
         warn "Installation failed or interrupted — cleaning up..."
     fi
     sync 2>/dev/null || true
-    # Unmount chroot bind mounts first (arch-chroot leaves these if interrupted).
-    # Must happen before fuser/umount or we'd kill host processes that have /dev open.
-    for bind in dev/pts dev sys proc run; do
-        umount "$TARGET_MOUNT/$bind" 2>/dev/null || umount -l "$TARGET_MOUNT/$bind" 2>/dev/null || true
-    done
-    umount "$TARGET_MOUNT/efi"  2>/dev/null || umount -l "$TARGET_MOUNT/efi"  2>/dev/null || true
-    [ -n "$HOME_PART" ] && { umount "$TARGET_MOUNT/home" 2>/dev/null || umount -l "$TARGET_MOUNT/home" 2>/dev/null || true; }
-    umount "$TARGET_MOUNT"      2>/dev/null || umount -l "$TARGET_MOUNT"      2>/dev/null || true
+    umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
 }
 trap cleanup EXIT
 

@@ -26,7 +26,7 @@ obanner() { printf "\n${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 cbanner() { printf "${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 reop()    { printf "${BOLD}${GREEN}%s${RESET}\n" "$*"; }
 
-TOTAL_STEPS=16
+TOTAL_STEPS=17
 CURRENT_STEP=0
 
 show_progress() {
@@ -94,13 +94,7 @@ read -rp "Enter target disk: " TARGET_DISK
 nlp
 
 info "Installation layout:"
-echo "  Init:         $TARGET_INI"
-echo "  Kernel:       $KERNEL"
-echo "  FS:           $TARGET_FS"
-echo "  Target:       $TARGET_DISK"
-echo "  EFI size:     $EFI_SIZE"
-echo "  Root:         single partition"
-echo "  Swap:         zram"
+cat default.conf
 nlp
 warn "WARNING: This will ERASE ALL DATA on $TARGET_DISK!"
 nlp
@@ -324,7 +318,7 @@ vm.watermark_scale_factor = $VM_WATERMARK_SCALE
 SYSCTL
 
 # mkinitcpio busybox type hooks
-sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect modconf block keyboard keymap consolefont filesystems fsck)/' /etc/mkinitcpio.conf
+sed -i 's/^HOOKS=.*/$TARGET_HOOKS/' /etc/mkinitcpio.conf
 mkinitcpio -P
 
 # GRUB
@@ -353,7 +347,5 @@ sync
 nlp
 reop "=== Klartix installation complete! ==="
 reop "You can now reboot into your new Artix Linux system."
-info "Init system:  $TARGET_INI"
-info "Kernel:       $KERNEL"
-info "User:         $TARGET_USER"
-info "Swap:         zram"
+info "Init:  $TARGET_INI"
+info "User:  $TARGET_USER"

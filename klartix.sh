@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-License-Identifier: 0BSD
+# SPDX-FileCopyrightText: 2026 h8d13
 # shellcheck disable=SC1091
 
 # Klartix - Artix Linux Bootstrap Installer

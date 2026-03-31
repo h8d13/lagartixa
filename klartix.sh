@@ -28,7 +28,8 @@ obanner() { printf "\n${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 cbanner() { printf "${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 reop()    { printf "${BOLD}${GREEN}%s${RESET}\n" "$*"; }
 
-TOTAL_STEPS=17
+# automatic count minus the next 2 uses
+TOTAL_STEPS=$(( $(grep -c 'show_progress' "$0") - 2 ))
 CURRENT_STEP=0
 
 show_progress() {
@@ -51,7 +52,7 @@ cleanup() {
     local exit_code=$?
     [ -z "$TARGET_MOUNT" ] && return
     if [ $exit_code -ne 0 ]; then
-        warn "Installation failed or interrupted — cleaning up..."
+        warn "Installation failed or interrupted cleaning up..."
     fi
     sync 2>/dev/null || true
     umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
@@ -312,7 +313,7 @@ case "$TARGET_INI" in
 esac
 ufw default deny incoming
 ufw default allow outgoing
-ufw enable
+sed -i 's/ENABLED=no/ENABLED=yes/' /etc/ufw/ufw.conf
 fi
 
 # zram swap

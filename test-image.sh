@@ -34,9 +34,8 @@ LOOP_DEV=$(losetup -f --show -P "$IMAGE_FILE")
 echo "      Loop device: $LOOP_DEV"
 
 cleanup() {
-    # klartix.sh owns unmounting only handle loop device and bootstrap leftovers here
     rm -rf /tmp/artix-bootstrap*
-    losetup -d "$LOOP_DEV" 2>/dev/null || true
+    sync
 }
 trap cleanup EXIT
 

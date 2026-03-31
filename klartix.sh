@@ -266,9 +266,10 @@ echo "root:$ROOT_PASSWORD" | chpasswd
 echo "Installing kernel and base packages..."
 pacman -S --noconfirm \
     $KERNEL linux-firmware \
-    grub efibootmgr mkinitcpio \
-    sudo \
-    git vim
+    grub mkinitcpio \
+    $ELEV \
+    git \
+    $EDITOR
 
 # User
 useradd -m -s /bin/bash -G wheel "$TARGET_USER"

@@ -275,37 +275,45 @@ pacman -S --noconfirm \
 [ "$_KHEADERS" = "1" ] && pacman -S --noconfirm "${KERNEL}-headers"
 
 # User
-useradd -m -s /bin/bash -G wheel,seat "$TARGET_USER"
+_GROUPS="wheel"
+[ "$SEAT_MGR" != "elogind" ] && _GROUPS="wheel,seat"
+useradd -m -s /bin/bash -G "$_GROUPS" "$TARGET_USER"
 echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
 case "$ELEV" in
     sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;
     doas) printf 'permit persist :wheel\n' > /etc/doas.conf ;;
 esac
 
-# Seat management 
-# this saves about 200mb of cached/RAM TODO: else elogind
-case "$TARGET_INI" in
-    openrc) pacman -S --noconfirm seatd seatd-openrc; rc-update add seatd default ;;
-    runit)  pacman -S --noconfirm seatd seatd-runit;  ln -s /etc/runit/sv/seatd /etc/runit/runsvdir/default/ ;;
-    s6)     pacman -S --noconfirm seatd seatd-s6;     s6-rc-bundle-update add default seatd ;;
-    dinit)  pacman -S --noconfirm seatd seatd-dinit;  dinitctl enable seatd ;;
-esac
-
-# XDG_RUNTIME_DIR create per-user dir at boot, export at login
-mkdir -p /etc/local.d
-cat > /etc/local.d/xdg-runtime.start << LOCALD
+# Seat management (seatd 200MB cache lighter than elogind)
+if [ "$SEAT_MGR" = "elogind" ]; then
+    case "$TARGET_INI" in
+        openrc) pacman -S --noconfirm elogind elogind-openrc; rc-update add elogind default ;;
+        runit)  pacman -S --noconfirm elogind elogind-runit;  ln -s /etc/runit/sv/elogind /etc/runit/runsvdir/default/ ;;
+        s6)     pacman -S --noconfirm elogind elogind-s6;     s6-rc-bundle-update add default elogind ;;
+        dinit)  pacman -S --noconfirm elogind elogind-dinit;  dinitctl enable elogind ;;
+    esac
+else
+    case "$TARGET_INI" in
+        openrc) pacman -S --noconfirm seatd seatd-openrc; rc-update add seatd default ;;
+        runit)  pacman -S --noconfirm seatd seatd-runit;  ln -s /etc/runit/sv/seatd /etc/runit/runsvdir/default/ ;;
+        s6)     pacman -S --noconfirm seatd seatd-s6;     s6-rc-bundle-update add default seatd ;;
+        dinit)  pacman -S --noconfirm seatd seatd-dinit;  dinitctl enable seatd ;;
+    esac
+    # elogind handles XDG_RUNTIME_DIR automatically seatd does not
+    mkdir -p /etc/local.d
+    cat > /etc/local.d/xdg-runtime.start << LOCALD
 #!/bin/sh
 uid=\$(id -u $TARGET_USER)
 mkdir -p /run/user/\$uid
 chown $TARGET_USER:$TARGET_USER /run/user/\$uid
 chmod 0700 /run/user/\$uid
 LOCALD
-chmod +x /etc/local.d/xdg-runtime.start
-rc-update add local default
-
-cat > /etc/profile.d/xdg-runtime-dir.sh << 'XDG'
-export XDG_RUNTIME_DIR="/run/user/\$(id -u)"
+    chmod +x /etc/local.d/xdg-runtime.start
+    rc-update add local default
+    cat > /etc/profile.d/xdg-runtime-dir.sh << 'XDG'
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 XDG
+fi
 
 # Network setup
 case "$NETWORK" in

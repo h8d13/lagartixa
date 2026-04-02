@@ -331,7 +331,7 @@ case "$NETWORK" in
         fi
         ;;
     iwd-dhcpc)
-        # iwd handles WiFi only — dhcpcd covers ethernet
+        # iwd handles WiFi only, dhcpcd covers ethernet
         case "$TARGET_INI" in
             openrc) pacman -S --noconfirm iwd iwd-openrc dhcpcd dhcpcd-openrc
                     rc-update add iwd default
@@ -344,6 +344,19 @@ case "$NETWORK" in
                     s6-rc-bundle-update add default dhcpcd ;;
             dinit)  pacman -S --noconfirm iwd iwd-dinit dhcpcd dhcpcd-dinit
                     dinitctl enable iwd
+                    dinitctl enable dhcpcd ;;
+        esac
+        ;;
+    dhcpc)
+        # dhcpcd covers ethernet only
+        case "$TARGET_INI" in
+            openrc) pacman -S --noconfirm dhcpcd dhcpcd-openrc
+                    rc-update add dhcpcd default ;;
+            runit)  pacman -S --noconfirm dhcpcd dhcpcd-runit
+                    ln -s /etc/runit/sv/dhcpcd /etc/runit/runsvdir/default/ ;;
+            s6)     pacman -S --noconfirm iwd iwd-s6 dhcpcd dhcpcd-s6
+                    s6-rc-bundle-update add default dhcpcd ;;
+            dinit)  pacman -S --noconfirm dhcpcd dhcpcd-dinit
                     dinitctl enable dhcpcd ;;
         esac
         ;;

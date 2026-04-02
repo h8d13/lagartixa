@@ -1,5 +1,5 @@
 #!/bin/bash
-# Test klartix.sh against a loop device image — no real disk needed
+# Test klartix.sh against a loop device image no real disk needed
 
 set -e
 

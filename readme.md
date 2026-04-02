@@ -21,14 +21,13 @@ sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
 # resize/create new parts as needed
 ```
 
-> Careful that `dd` might look frozen but is not, is flushing (depending on how slow is your disk/pc).
+> Careful `dd` might look frozen but is not, is flushing (depending on how slow is your disk/pc).
 
 ---
 
 # Lagartixa
 
 Ressources: 
-
 
 AIS: https://github.com/archlinux/arch-install-scripts
 
@@ -38,5 +37,4 @@ https://wiki.gentoo.org/wiki/Main_Page
 https://gitea.artixlinux.org/artix/artix-bootstrap/
 
 Not used:
-
 TUI: https://man7.org/linux/man-pages/man1/tput.1.html

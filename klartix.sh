@@ -330,7 +330,7 @@ case "$NETWORK" in
             printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi-backend.conf
         fi
         ;;
-    iwd)
+    iwd-dhcpc)
         # iwd handles WiFi only — dhcpcd covers ethernet
         case "$TARGET_INI" in
             openrc) pacman -S --noconfirm iwd iwd-openrc dhcpcd dhcpcd-openrc

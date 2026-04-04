@@ -45,9 +45,6 @@ This project aims to build a stage 1 and limit it's scope to this. This doesn't 
 
 Ressources: 
 
-Tools: https://github.com/archlinux/arch-install-scripts
-https://github.com/archlinux/pacman-contrib
-
 MIRRORS: https://status.artixlinux.org/mirrors/status/
 
 > Archived mirrors, to upgrade fully refresh after editing `/etc/pacman.d/mirrorlist` then `pacman -Syyu`

@@ -232,7 +232,6 @@ install_svc() {
 
 echo "Initializing pacman keyring..."
 pacman-key --init
-$PM_CMD artix-keyring
 pacman-key --populate artix
 
 echo "Updating package databases..."
@@ -268,27 +267,6 @@ printf "nameserver $DNS1\nnameserver $DNS2\n" > /etc/resolv.conf
 # Root password
 echo "root:$ROOT_PASSWORD" | chpasswd
 
-# Seat management (seatd-openrc already installed by bootstrap to pin init-logind provider)
-if [ "$SEAT_MGR" = "elogind" ]; then
-    install_svc elogind
-else
-    install_svc seatd
-    # elogind handles XDG_RUNTIME_DIR automatically seatd does not
-    mkdir -p /etc/local.d
-    cat > /etc/local.d/xdg-runtime.start << LOCALD
-#!/bin/sh
-uid=\$(id -u $TARGET_USER)
-mkdir -p /run/user/\$uid
-chown $TARGET_USER:$TARGET_USER /run/user/\$uid
-chmod 0700 /run/user/\$uid
-LOCALD
-    chmod +x /etc/local.d/xdg-runtime.start
-    rc-update add local default
-    cat > /etc/profile.d/xdg-runtime-dir.sh << 'XDG'
-export XDG_RUNTIME_DIR="/run/user/$(id -u)"
-XDG
-fi
-
 # Kernel, bootloader & base packages
 echo "Installing kernel and base packages..."
 $PM_CMD \
@@ -307,9 +285,10 @@ if [ "$SEAT_MGR" != "elogind" ]; then
     groupadd -f seat
     _GROUPS="wheel,seat"
 fi
-useradd -m -s /bin/bash -G "$_GROUPS" "$TARGET_USER"
-[ "$SEAT_MGR" != "elogind" ] && usermod -aG seat "$TARGET_USER"
+useradd -m -s /bin/bash -G "\$_GROUPS" "$TARGET_USER"
 echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
+
+# Privilege esc
 case "$ELEV" in
     sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;
     doas)
@@ -318,6 +297,26 @@ case "$ELEV" in
         chmod 0644 /etc/doas.conf
         ;;
 esac
+
+# Seat management (seatd-openrc already installed by bootstrap to pin init-logind provider)
+if [ "$SEAT_MGR" = "elogind" ]; then
+    install_svc elogind
+else
+    install_svc seatd
+    # elogind handles XDG_RUNTIME_DIR automatically seatd does not
+    mkdir -p /etc/local.d
+    cat > /etc/local.d/xdg-runtime.start << LOCALD
+#!/bin/sh
+uid=\$(id -u $TARGET_USER)
+mkdir -p /run/user/\$uid
+chown $TARGET_USER:$TARGET_USER /run/user/\$uid
+chmod 0700 /run/user/\$uid
+LOCALD
+    chmod +x /etc/local.d/xdg-runtime.start
+    cat > /etc/profile.d/xdg-runtime-dir.sh << 'XDG'
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+XDG
+fi
 
 # Network setup
 case "$NETWORK" in

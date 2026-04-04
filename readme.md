@@ -17,6 +17,8 @@ Reproducible through mirror choice, this means a build one day is the same the n
 
 ## Run
 
+> Edit the `default.conf`
+
 ```shell
 sudo ./test-image.sh        # default creates /dev/loop0 
 rm /tmp/artix-test.img      # reset output img
@@ -39,7 +41,7 @@ https://github.com/archlinux/pacman-contrib
 
 MIRRORS: https://status.artixlinux.org/mirrors/status/
 
-> If you used archived mirrors, to upgrade fully refresh after editing `/etc/pacman.d/mirrorlist` then `pacman -Syyu`
+> Archived mirrors, to upgrade fully refresh after editing `/etc/pacman.d/mirrorlist` then `pacman -Syyu`
 
 WIKIS: 
 https://wiki.artixlinux.org/ 

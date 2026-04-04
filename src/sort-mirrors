@@ -34,11 +34,9 @@ jq -r "[ ${jq_filter} ] | sort_by(.score) | .[:${TOP_N}][] | \"Server = \(.url)\
 
 rm -f "$TMP"
 
-# include officials in the pool
+# add official1
 cat >> "$TMP_MIRRORS" << 'EOF'
 Server = https://mirror1.artixlinux.org/repos/$repo/os/$arch
-Server = https://mirror2.artixlinux.org/$repo/os/$arch
-Server = https://mirror3.artixlinux.org/repos/$repo/os/$arch
 EOF
 
 echo "# Testing $(wc -l < "$TMP_MIRRORS") mirrors with rankmirrors..."

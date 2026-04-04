@@ -18,19 +18,17 @@ Reproducible through mirror choice, this means a build one day is the same the n
 ## Run
 
 ```shell
-sudo ./test-image.sh        # default 
-rm /tmp/artix-test.img      # reset img
-# flash or qemu/vmware
+sudo ./test-image.sh        # default creates /dev/loop0 
+rm /tmp/artix-test.img      # reset output img
+# flash or test in qemu/vmware
 sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
-# bare-metal test
+# bare-metal pick disk direcly
 sudo bash klartix.sh
 ```
 
-> Careful `dd` and other disk ops might look frozen but is not, is flushing (depending on how slow is your disk/pc).
+> Careful `dd` and might look frozen but is not, is flushing (depending on how slow is your disk/pc).
 
 This project aims to build a stage 1 and limit it's scope to this. This doesn't include Desktops/Window Managers, or any post initial configs.
-
-The program by default creates a `/dev/loop0` for install to be streamlined (then loop1, ...)
 
 ---
 

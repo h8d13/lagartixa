@@ -10,6 +10,7 @@ One config file, EVERYTHING must be variables that can be matched to options, on
 Goal is to show the minimal working PoC and to let the rest be user defined through conf. 
 
 Testing: I mostly test from host straight, create the in a loop device, then copy `.img` output to a shitty USB.
+Reproducible through mirror choice, this means a build one day is the same the next.
 
 ## Run
 

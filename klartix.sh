@@ -287,6 +287,7 @@ fi
 # Kernel, bootloader & base packages
 echo "Installing kernel and base packages..."
 $PM_CMD \
+	$HW_CPU \
     $KERNEL $FW \
     grub mkinitcpio \
     $ELEV \

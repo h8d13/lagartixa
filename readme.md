@@ -2,14 +2,15 @@
 
 Dev rules: 
 
-Bash only - only use libs available in the `base` ISO or small libs/deps, all stated in the main script.
-No ISO needed -> bootstrap
-Target: `x86_64` UEFI.
+Bash only - only use libs available in the `base` ISO or small libs/deps (`parted`, `wget` and `arch-install-scripts`), all stated in the source code.
+
+No ISO needed -> bootstrap - Target: `x86_64` UEFI.
 
 One config file, EVERYTHING must be variables that can be matched to options, one script.
+
 Goal is to show the minimal working PoC and to let the rest be user defined through conf. 
 
-Testing: I mostly test from host straight, create the in a loop device, then copy `.img` output to a shitty USB.
+Testing: I mostly test from host straight, create a loop device, then copy `.img` output to a shitty USB.
 Reproducible through mirror choice, this means a build one day is the same the next.
 
 ## Run

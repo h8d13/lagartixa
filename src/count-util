@@ -1,5 +1,5 @@
 #!/bin/bash
-# count-util — spot heavy dep chains
+# count-util spot heavy dep chains
 # requires: pacman-contrib (pactree)
 # usage: ./count-util [pkg]
 #   no arg: show top 20 packages by unique dep count

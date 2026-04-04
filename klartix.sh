@@ -350,6 +350,8 @@ vm.watermark_boost_factor = $VM_WATERMARK_BOOST
 vm.watermark_scale_factor = $VM_WATERMARK_SCALE
 SYSCTL
 
+$PM_CMD $EXTRAS
+
 # mkinitcpio busybox type hooks
 sed -i 's/^HOOKS=.*/$TARGET_HOOKS/' /etc/mkinitcpio.conf
 mkinitcpio -P

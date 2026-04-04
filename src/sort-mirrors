@@ -1,5 +1,5 @@
 #!/bin/bash
-# sort-mirrors — fetch and rank Artix mirrors by speed
+# sort-mirrors fetch and rank Artix mirrors by speed
 # requires: jq, wget, pacman-contrib (rankmirrors)
 # usage: ./sort-mirrors [country_code] [top_n]
 #   country_code: filter by country (e.g. DE, FR, CZ) omit for all

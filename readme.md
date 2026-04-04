@@ -1,4 +1,4 @@
-# artixinstall
+# Lagartixa
 
 Dev rules: 
 
@@ -17,7 +17,7 @@ Reproducible through mirror choice, this means a build one day is the same the n
 ```shell
 sudo ./test-image.sh        # default 
 rm /tmp/artix-test.img      # reset img
-# flash or qemu
+# flash or qemu/vmware
 sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
 # resize/create new parts as needed
 ```
@@ -25,8 +25,6 @@ sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
 > Careful `dd` might look frozen but is not, is flushing (depending on how slow is your disk/pc).
 
 ---
-
-# Lagartixa
 
 Ressources: 
 

@@ -1,0 +1,52 @@
+#!/bin/bash
+# sort-mirrors — fetch and rank Artix mirrors by speed
+# requires: jq, wget, pacman-contrib (rankmirrors)
+# usage: ./sort-mirrors [country_code] [top_n]
+#   country_code: filter by country (e.g. DE, FR, CZ) — omit for all
+#   top_n: number of results to show (default: 10)
+#
+# example: ./sort-mirrors DE 5
+#          ./sort-mirrors "" 10
+
+COUNTRY="${1:-}"
+TOP_N="${2:-10}"
+
+JSON_URL="https://status.artixlinux.org/mirrors/status/json/"
+
+TMP=$(mktemp)
+TMP_MIRRORS=$(mktemp)
+
+wget -q -O "$TMP" "$JSON_URL" || { echo "Failed to fetch mirror data"; rm -f "$TMP" "$TMP_MIRRORS"; exit 1; }
+
+jq_filter='
+  .urls[]
+  | select(.active == true)
+  | select(.protocol == "https")
+  | select(.score != null)
+  | select(.completion_pct >= 0.99)
+'
+
+if [ -n "$COUNTRY" ]; then
+    jq_filter="${jq_filter} | select(.country_code == \"$COUNTRY\")"
+fi
+
+jq -r "[ ${jq_filter} ] | sort_by(.score) | .[:${TOP_N}][] | \"Server = \(.url)\$repo/os/\$arch\"" "$TMP" > "$TMP_MIRRORS"
+
+rm -f "$TMP"
+
+echo "# Testing $(wc -l < "$TMP_MIRRORS") mirrors with rankmirrors..."
+echo ""
+
+echo "# Artix Linux Mirrorlist"
+echo "# Generated: $(date -u '+%Y-%m-%d %H:%M UTC')"
+echo ""
+echo "# Official mirrors"
+echo "Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch"
+echo "Server = https://mirror2.artixlinux.org/\$repo/os/\$arch"
+echo "Server = https://mirror3.artixlinux.org/repos/\$repo/os/\$arch"
+echo ""
+echo "# Ranked mirrors${COUNTRY:+ (country: $COUNTRY)}"
+
+rankmirrors "$TMP_MIRRORS"
+
+rm -f "$TMP_MIRRORS"

@@ -1,3 +1,4 @@
 #!/bin/bash
 # requires pacman-contrib
+# used to spot chains in deps
 for p in $(pacman -Qqe); do echo "$(( $(pactree -u "$p" 2>/dev/null | wc -l) - 1 )) $p"; done | sort -rn | head -20

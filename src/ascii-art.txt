@@ -71,3 +71,7 @@
                                                                                                     
                                                                                     .       -    .: 
        .                                               .                           .              . 
+
+###################################################################################################
+
+The tools inside this dir are simple stuff I used along the way. Usually pertains to pacman-contrib

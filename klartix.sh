@@ -28,6 +28,23 @@ obanner() { printf "\n${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 cbanner() { printf "${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 reop()    { printf "${BOLD}${GREEN}%s${RESET}\n" "$*"; }
 
+# chroot wrapper - replaces arch-chroot, matching artix-bootstrap style
+run_chroot() {
+    local dest="$1"
+    shift
+    LC_ALL=C mount --types proc /proc "$dest/proc"
+    LC_ALL=C mount --rbind /sys "$dest/sys"
+    LC_ALL=C mount --make-rslave "$dest/sys"
+    LC_ALL=C mount --rbind /dev "$dest/dev"
+    LC_ALL=C mount --make-rslave "$dest/dev"
+    LC_ALL=C chroot "$dest" "$@"
+    local ret=$?
+    LC_ALL=C umount -R "$dest/proc"
+    LC_ALL=C umount -R "$dest/sys"
+    LC_ALL=C umount -R "$dest/dev"
+    return $ret
+}
+
 # automatic count minus the next 2 uses
 TOTAL_STEPS=$(( $(grep -c 'show_progress' "$0") - 2 ))
 CURRENT_STEP=0
@@ -66,14 +83,6 @@ TARGET_DISK=""
 TARGET_USER=""
 USER_PASSWORD=""
 ROOT_PASSWORD=""
-
-# Host prerequisites
-PKGS="wget parted arch-install-scripts"
-case "$TARGET_FS" in
-    btrfs) PKGS="$PKGS btrfs-progs" ;;
-    xfs)   PKGS="$PKGS xfsprogs" ;;
-    f2fs)  PKGS="$PKGS f2fs-tools" ;;
-esac
 
 # PREFLIGHT
 [ "$(id -u)" -ne 0 ] && die "This script must be run as root."
@@ -122,12 +131,8 @@ read -rsp "Confirm user password: " USER_PASSWORD_CONFIRM; nlp
 [ "$USER_PASSWORD" != "$USER_PASSWORD_CONFIRM" ] && die "User passwords do not match."
 [ -z "$USER_PASSWORD" ] && die "User password cannot be empty."
 
-# HOST SIDE
-show_progress "Installing required packages on host..."
+# Target system package manager command (used in chroot)
 PM_CMD="pacman -S --noconfirm --needed"
-# shellcheck disable=SC2086
-$PM_CMD $PKGS
-# to adapt if using a different PM
 
 show_progress "Cleaning up previous installation attempts..."
 umount -R "$TARGET_MOUNT" 2>/dev/null || true
@@ -372,7 +377,7 @@ chmod +x "$TARGET_MOUNT/configure.sh"
 
 # RUN
 show_progress "Executing system configuration in chroot..."
-arch-chroot "$TARGET_MOUNT" /bin/bash /configure.sh
+run_chroot "$TARGET_MOUNT" /bin/bash /configure.sh
 
 show_progress "Cleaning up configuration script..."
 rm "$TARGET_MOUNT/configure.sh"

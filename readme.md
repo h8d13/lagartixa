@@ -4,7 +4,16 @@ Dev rules:
 
 Bash only - only use libs available in the `base` ISO or small libs/deps, all stated in the source code.
 
-`bash coreutils wget sed gawk tar gzip chroot xz zstd arch-install-scripts parted`
+`bash coreutils wget sed gawk tar gzip xz zstd parted`
+
+Filesystem tools (based on `TARGET_FS`):
+
+| Filesystem | Tool |
+|------------|------|
+| `ext4` | - |
+| `btrfs` | `btrfs-progs` |
+| `xfs` | `xfsprogs` |
+| `f2fs` | `f2fs-tools` |
 
 No ISO needed -> bootstrap - Target: `x86_64` UEFI.
 

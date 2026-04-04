@@ -262,11 +262,11 @@ printf "nameserver $DNS1\nnameserver $DNS2\n" > /etc/resolv.conf
 # Root password
 echo "root:$ROOT_PASSWORD" | chpasswd
 
-# Seat management (packages already installed by bootstrap to pin init-logind provider)
+# Seat management (seatd-openrc already installed by bootstrap to pin init-logind provider)
 if [ "$SEAT_MGR" = "elogind" ]; then
-    enable_svc elogind
+    install_svc elogind
 else
-    enable_svc seatd
+    install_svc seatd
     # elogind handles XDG_RUNTIME_DIR automatically seatd does not
     mkdir -p /etc/local.d
     cat > /etc/local.d/xdg-runtime.start << LOCALD
@@ -302,9 +302,9 @@ echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
 case "$ELEV" in
     sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;
     doas)
-        printf 'permit persist :wheel\n' > /etc/doas.conf
+        printf 'permit persist %s as root\n' "$TARGET_USER" > /etc/doas.conf
         chown root:root /etc/doas.conf
-        chmod 0400 /etc/doas.conf
+        chmod 0644 /etc/doas.conf
         ;;
 esac
 

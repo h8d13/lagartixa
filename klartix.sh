@@ -205,20 +205,25 @@ FSTAB
 
 # CHROOT CONFIG
 
-#   enable_svc() {                                                                                                                                                                                                                            
-#       case "$TARGET_INI" in                                                                                                                                                                                                                 
-#           openrc) rc-update add "\$1" default ;;                                                                                                                                                                                            
-#           runit)  ln -s "/etc/runit/sv/\$1" /etc/runit/runsvdir/default/ ;;                                                                                                                                                                 
-#           s6)     s6-rc-bundle-update add default "\$1" ;;                                                                                                                                                                                  
-#           dinit)  dinitctl enable "\$1" ;;                                                                                                                                                                                                  
-#       esac                                                                                                                                                                                                                                  
-#   }                                                                                                                                                                                                                                         
-# then refactor defs: same pattern for 'pkg pkg-initsystem' create one def to avoid duplication
-
 show_progress "Creating chroot configuration script..."
 cat > "$TARGET_MOUNT/configure.sh" << EOF
 #!/bin/bash
 set -e
+
+enable_svc() {
+    case "$TARGET_INI" in
+        openrc) rc-update add "\$1" default ;;
+        runit)  ln -s "/etc/runit/sv/\$1" /etc/runit/runsvdir/default/ ;;
+        s6)     s6-rc-bundle-update add default "\$1" ;;
+        dinit)  dinitctl enable "\$1" ;;
+    esac
+}
+# install_svc <pkg> [svcname]  — installs pkg + pkg-$TARGET_INI then enables the service
+install_svc() {
+    local pkg="\$1" svc="\${2:-\$1}"
+    "$PM_CMD" "\$pkg" "\$pkg-$TARGET_INI"
+    enable_svc "\$svc"
+}
 
 echo "Initializing pacman keyring..."
 pacman-key --init
@@ -287,19 +292,9 @@ esac
 
 # Seat management (seatd 200MB cache lighter than elogind)
 if [ "$SEAT_MGR" = "elogind" ]; then
-    case "$TARGET_INI" in
-        openrc) "$PM_CMD" elogind elogind-openrc; rc-update add elogind default ;;
-        runit)  "$PM_CMD" elogind elogind-runit;  ln -s /etc/runit/sv/elogind /etc/runit/runsvdir/default/ ;;
-        s6)     "$PM_CMD" elogind elogind-s6;     s6-rc-bundle-update add default elogind ;;
-        dinit)  "$PM_CMD" elogind elogind-dinit;  dinitctl enable elogind ;;
-    esac
+    install_svc elogind
 else
-    case "$TARGET_INI" in
-        openrc) "$PM_CMD" seatd seatd-openrc; rc-update add seatd default ;;
-        runit)  "$PM_CMD" seatd seatd-runit;  ln -s /etc/runit/sv/seatd /etc/runit/runsvdir/default/ ;;
-        s6)     "$PM_CMD" seatd seatd-s6;     s6-rc-bundle-update add default seatd ;;
-        dinit)  "$PM_CMD" seatd seatd-dinit;  dinitctl enable seatd ;;
-    esac
+    install_svc seatd
     # elogind handles XDG_RUNTIME_DIR automatically seatd does not
     mkdir -p /etc/local.d
     cat > /etc/local.d/xdg-runtime.start << LOCALD
@@ -319,12 +314,7 @@ fi
 # Network setup
 case "$NETWORK" in
     nm|nm-iwd)
-        case "$TARGET_INI" in
-            openrc) "$PM_CMD" networkmanager-openrc; rc-update add NetworkManager default ;;
-            runit)  "$PM_CMD" networkmanager-runit;  ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/ ;;
-            s6)     "$PM_CMD" networkmanager-s6;     s6-rc-bundle-update add default NetworkManager ;;
-            dinit)  "$PM_CMD" networkmanager-dinit;  dinitctl enable NetworkManager ;;
-        esac
+        install_svc networkmanager NetworkManager
         if [ "$NETWORK" = "nm-iwd" ]; then
             "$PM_CMD" iwd
             mkdir -p /etc/NetworkManager/conf.d
@@ -333,44 +323,18 @@ case "$NETWORK" in
         ;;
     iwd-dhcpc)
         # iwd handles WiFi only, dhcpcd covers ethernet
-        case "$TARGET_INI" in
-            openrc) "$PM_CMD" iwd iwd-openrc dhcpcd dhcpcd-openrc
-                    rc-update add iwd default
-                    rc-update add dhcpcd default ;;
-            runit)  "$PM_CMD" iwd iwd-runit dhcpcd dhcpcd-runit
-                    ln -s /etc/runit/sv/iwd   /etc/runit/runsvdir/default/
-                    ln -s /etc/runit/sv/dhcpcd /etc/runit/runsvdir/default/ ;;
-            s6)     "$PM_CMD" iwd iwd-s6 dhcpcd dhcpcd-s6
-                    s6-rc-bundle-update add default iwd
-                    s6-rc-bundle-update add default dhcpcd ;;
-            dinit)  "$PM_CMD" iwd iwd-dinit dhcpcd dhcpcd-dinit
-                    dinitctl enable iwd
-                    dinitctl enable dhcpcd ;;
-        esac
+        install_svc iwd
+        install_svc dhcpcd
         ;;
     dhcpc)
         # dhcpcd covers ethernet only
-        case "$TARGET_INI" in
-            openrc) "$PM_CMD" dhcpcd dhcpcd-openrc
-                    rc-update add dhcpcd default ;;
-            runit)  "$PM_CMD" dhcpcd dhcpcd-runit
-                    ln -s /etc/runit/sv/dhcpcd /etc/runit/runsvdir/default/ ;;
-            s6)     "$PM_CMD" iwd iwd-s6 dhcpcd dhcpcd-s6
-                    s6-rc-bundle-update add default dhcpcd ;;
-            dinit)  "$PM_CMD" dhcpcd dhcpcd-dinit
-                    dinitctl enable dhcpcd ;;
-        esac
+        install_svc dhcpcd
         ;;
 esac
 
 # Firewall
 if [ "$USE_UFW" = "1" ]; then
-case "$TARGET_INI" in
-    openrc) "$PM_CMD" ufw ufw-openrc; rc-update add ufw default ;;
-    runit)  "$PM_CMD" ufw ufw-runit;  ln -s /etc/runit/sv/ufw /etc/runit/runsvdir/default/ ;;
-    s6)     "$PM_CMD" ufw ufw-s6;     s6-rc-bundle-update add default ufw ;;
-    dinit)  "$PM_CMD" ufw ufw-dinit;  dinitctl enable ufw ;;
-esac
+install_svc ufw
 ufw default deny incoming
 ufw default allow outgoing
 sed -i 's/ENABLED=no/ENABLED=yes/' /etc/ufw/ufw.conf

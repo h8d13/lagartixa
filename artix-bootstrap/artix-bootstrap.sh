@@ -1,7 +1,7 @@
 #!/bin/bash
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Artix
-#
+# Modifications under 0BSD by h8d13
 # artix-bootstrap: Bootstrap a base Artix Linux system using any GNU distribution.
 #
 # Dependencies: bash >= 4, coreutils, wget, sed, gawk, tar, gzip, chroot, xz, zstd.

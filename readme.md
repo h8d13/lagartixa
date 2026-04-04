@@ -4,7 +4,7 @@ Dev rules:
 
 Bash only - only use libs available in the `base` ISO or small libs/deps, all stated in the source code.
 
-`bash coreutils wget sed gawk tar gzip xz zstd parted`
+`bash coreutils curl sed gawk tar gzip xz zstd parted`
 
 Filesystem tools (based on `TARGET_FS`):
 

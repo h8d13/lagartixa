@@ -1,6 +1,6 @@
 #!/bin/bash
 # sort-mirrors fetch and rank Artix mirrors by speed
-# requires: jq, wget, pacman-contrib (rankmirrors)
+# requires: jq, curl, pacman-contrib (rankmirrors)
 # usage: ./sort-mirrors [country_code] [top_n]
 #   country_code: filter by country (e.g. DE, FR, CZ) omit for all
 #   top_n: number of results to show (default: 10)
@@ -17,7 +17,7 @@ JSON_URL="https://status.artixlinux.org/mirrors/status/json/"
 TMP=$(mktemp)
 TMP_MIRRORS=$(mktemp)
 
-wget -q -O "$TMP" "$JSON_URL" || { echo "Failed to fetch mirror data"; rm -f "$TMP" "$TMP_MIRRORS"; exit 1; }
+curl -sSL -o "$TMP" "$JSON_URL" || { echo "Failed to fetch mirror data"; rm -f "$TMP" "$TMP_MIRRORS"; exit 1; }
 
 jq_filter='
   .urls[]

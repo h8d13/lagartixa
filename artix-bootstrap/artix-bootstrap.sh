@@ -4,7 +4,7 @@
 # Modifications under 0BSD by h8d13
 # artix-bootstrap: Bootstrap a base Artix Linux system using any GNU distribution.
 #
-# Dependencies: bash >= 4, coreutils, wget, sed, gawk, tar, gzip, chroot, xz, zstd.
+# Dependencies: bash >= 4, coreutils, curl, sed, gawk, tar, gzip, xz, zstd.
 #
 # Install:
 #
@@ -55,11 +55,9 @@ fetch_file() {
   local FILEPATH=$1 status_code=
   shift
   if [[ -e "$FILEPATH" ]]; then
-    #curl -L -z "$FILEPATH" -o "$FILEPATH" "$@"
-    status_code=$(curl --write-out %{http_code} -L -z "$FILEPATH" -o "$FILEPATH" "$@")
+    status_code=$(curl --progress-bar --write-out %{http_code} -L -z "$FILEPATH" -o "$FILEPATH" "$@")
   else
-    status_code=$(curl --write-out %{http_code} -L -o "$FILEPATH" "$@")
-    #curl -L -o "$FILEPATH" "$@"
+    status_code=$(curl --progress-bar --write-out %{http_code} -L -o "$FILEPATH" "$@")
   fi
 
   if [[ "$status_code" -eq 200 ]] ; then
@@ -124,7 +122,7 @@ configure_minimal_system() {
   test -e "$DEST/dev/random" || mknod -m 0644 "$DEST/dev/random" c 1 8
   test -e "$DEST/dev/urandom" || mknod -m 0644 "$DEST/dev/urandom" c 1 9
 
-  sed -i 's|^#XferCommand = /usr/bin/curl -L|XferCommand = /usr/bin/curl -k -L|' "$DEST/etc/pacman.conf"
+  sed -i 's|^#XferCommand = /usr/bin/curl -L|XferCommand = /usr/bin/curl -k -L --progress-bar|' "$DEST/etc/pacman.conf"
   sed -i 's/^DownloadUser/#DownloadUser/' "$DEST/etc/pacman.conf"
   sed -i "s/^[[:space:]]*\(CheckSpace\)/# \1/" "$DEST/etc/pacman.conf"
   sed -i "s/^[[:space:]]*SigLevel[[:space:]]*=.*$/SigLevel = Never/" "$DEST/etc/pacman.conf"

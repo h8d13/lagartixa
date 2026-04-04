@@ -7,4 +7,14 @@
 There is another dep chain: `NM -> polkit -> elogind`
 We got rid of it by using `dhcpd` and `iwd` directly + `seatd` and patched said file above
 
+## Even worse chains
+
+```
+244 +  install_packages "$ARCH" "$DEST" "${SEAT_MGR}-${INIT}" # pin init-logind provider before base resolves it                
+245    install_packages "$ARCH" "$DEST" "base ${INIT}" # removed elogind to give choice ie seatd
+```
+
+This code simply did not exist in artix-bootstrap meaning elogind was alwasy being pulled in eitherway
+So I added a -s flag for seat managers
+
 

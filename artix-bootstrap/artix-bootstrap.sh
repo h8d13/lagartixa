@@ -187,21 +187,23 @@ cleanup_files() {
 }
 
 show_usage() {
-  stderr "Usage: $(basename "$0") [-q] [-i INIT] [-r REPO_URL] [-d DOWNLOAD_DIR] DESTDIR"
+  stderr "Usage: $(basename "$0") [-q] [-i INIT] [-s SEAT_MGR] [-r REPO_URL] [-d DOWNLOAD_DIR] DESTDIR"
 }
 
 main() {
   # Process arguments and options
   test $# -eq 0 && set -- "-h"
   local INIT=
+  local SEAT_MGR=
   local ARCH=
   local REPO_URL=
   local DOWNLOAD_DIR=
   local PRESERVE_DOWNLOAD_DIR=
-  
-  while getopts "qi:r:d:h" ARG; do
+
+  while getopts "qi:s:r:d:h" ARG; do
     case "$ARG" in
       i) INIT=$OPTARG;;
+      s) SEAT_MGR=$OPTARG;;
       r) REPO_URL=$OPTARG;;
       d) DOWNLOAD_DIR=$OPTARG
          PRESERVE_DOWNLOAD_DIR=true;;
@@ -212,6 +214,7 @@ main() {
   test $# -eq 1 || { show_usage; return 1; }
   
   [[ -z "$INIT" ]] && INIT="openrc"
+  [[ -z "$SEAT_MGR" ]] && SEAT_MGR="seatd"
   [[ -z "$ARCH" ]] && ARCH="x86_64"
   [[ -z "$REPO_URL" ]] && REPO_URL=$(get_default_repo "$ARCH")
   
@@ -238,6 +241,7 @@ main() {
   install_pacman_packages "${BASIC_PACKAGES[*]}" "$DEST" "$DOWNLOAD_DIR" "$SYSTEM_LIST" "$WORLD_LIST" "$GALAXY_LIST"
   configure_pacman "$DEST" "$ARCH"
   configure_minimal_system "$DEST"
+  install_packages "$ARCH" "$DEST" "${SEAT_MGR}-${INIT}" # pin init-logind provider before base resolves it
   install_packages "$ARCH" "$DEST" "base ${INIT}" # removed elogind to give choice ie seatd
   install_packages "$ARCH" "$DEST" "artix-keyring"
   configure_pacman "$DEST" "$ARCH" # Pacman must be re-configured

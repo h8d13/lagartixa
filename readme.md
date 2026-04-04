@@ -26,6 +26,8 @@ sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
 
 This project aims to build a stage 1 and limit it's scope to this. This doesn't include Desktops/Window Managers, or any post initial configs.
 
+The program by default creates a `/dev/loop0` for install to be streamlined (then loop1, ...)
+
 ---
 
 Ressources: 
@@ -37,5 +39,3 @@ https://wiki.artixlinux.org/
 https://wiki.gentoo.org/wiki/Main_Page
 https://gitea.artixlinux.org/artix/artix-bootstrap/
 
-Not used:
-TUI: https://man7.org/linux/man-pages/man1/tput.1.html

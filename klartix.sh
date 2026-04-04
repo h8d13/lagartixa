@@ -126,7 +126,7 @@ read -rsp "Confirm user password: " USER_PASSWORD_CONFIRM; nlp
 show_progress "Installing required packages on host..."
 PM_CMD="pacman -S --noconfirm --needed"
 # shellcheck disable=SC2086
-"$PM_CMD" $PKGS
+$PM_CMD $PKGS
 # to adapt if using a different PM
 
 show_progress "Cleaning up previous installation attempts..."
@@ -187,9 +187,9 @@ BOOTSTRAP="$SCRIPT_DIR/artix-bootstrap/artix-bootstrap.sh"
 show_progress "Bootstrapping Artix Linux with $TARGET_INI..."
 if [ -n "$MIRROR_URL" ]; then
     info "Using mirror: $MIRROR_URL"
-    "$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" "$TARGET_MOUNT"
+    "$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 else
-    "$BOOTSTRAP" -i "$TARGET_INI" "$TARGET_MOUNT"
+    "$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 fi
 
 # FSTAB
@@ -221,7 +221,7 @@ enable_svc() {
 # install_svc <pkg> [svcname]  — installs pkg + pkg-$TARGET_INI then enables the service
 install_svc() {
     local pkg="\$1" svc="\${2:-\$1}"
-    "$PM_CMD" "\$pkg" "\$pkg-$TARGET_INI"
+    $PM_CMD "\$pkg" "\$pkg-$TARGET_INI"
     enable_svc "\$svc"
 }
 
@@ -241,19 +241,12 @@ echo "$TARGET_LOCALE UTF-8" > /etc/locale.gen
 locale-gen
 echo "LANG=$TARGET_LOCALE" > /etc/locale.conf
 
-# Console keymap & font
-case "$TARGET_INI" in
-    openrc)
-        echo "keymap=\"$VCONSOLE_KB\""    > /etc/conf.d/keymaps
-        echo "windowkeys=\"YES\""          >> /etc/conf.d/keymaps
-        echo "extended_keymaps=\"\""       >> /etc/conf.d/keymaps
-        echo "consolefont=\"$VCONSOLE_FONT\"" > /etc/conf.d/consolefont
-        ;;
-    runit|s6|dinit)
-        echo "KEYMAP=$VCONSOLE_KB"  > /etc/vconsole.conf
-        echo "FONT=$VCONSOLE_FONT" >> /etc/vconsole.conf
-        ;;
-esac
+# Console keymap & font vconsole.conf read by mkinitcpio regardless of init
+printf "KEYMAP=%s\nFONT=%s\n" "$VCONSOLE_KB" "$VCONSOLE_FONT" > /etc/vconsole.conf
+if [ "$TARGET_INI" = "openrc" ]; then
+    printf 'keymap="%s"\nwindowkeys="YES"\nextended_keymaps=""\n' "$VCONSOLE_KB" > /etc/conf.d/keymaps
+    echo "consolefont=\"$VCONSOLE_FONT\"" > /etc/conf.d/consolefont
+fi
 
 # Hostname
 echo "$TARGET_HOSTNAME" > /etc/hostname
@@ -269,28 +262,7 @@ printf "nameserver $DNS1\nnameserver $DNS2\n" > /etc/resolv.conf
 # Root password
 echo "root:$ROOT_PASSWORD" | chpasswd
 
-# Kernel, bootloader & base packages
-echo "Installing kernel and base packages..."
-"$PM_CMD" \
-    $KERNEL $FW \
-    grub mkinitcpio \
-    $ELEV \
-    git \
-    $EDITOR
-
-[ "$_KHEADERS" = "1" ] && "$PM_CMD" "${KERNEL}-headers"
-
-# User
-_GROUPS="wheel"
-[ "$SEAT_MGR" != "elogind" ] && _GROUPS="wheel,seat"
-useradd -m -s /bin/bash -G "$_GROUPS" "$TARGET_USER"
-echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
-case "$ELEV" in
-    sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;
-    doas) printf 'permit persist :wheel\n' > /etc/doas.conf ;;
-esac
-
-# Seat management (seatd 200MB cache lighter than elogind)
+# Seat management
 if [ "$SEAT_MGR" = "elogind" ]; then
     install_svc elogind
 else
@@ -311,12 +283,33 @@ export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 XDG
 fi
 
+# Kernel, bootloader & base packages
+echo "Installing kernel and base packages..."
+$PM_CMD \
+    $KERNEL $FW \
+    grub mkinitcpio \
+    $ELEV \
+    git \
+    $EDITOR
+
+[ "$_KHEADERS" = "1" ] && $PM_CMD "${KERNEL}-headers"
+
+# User
+_GROUPS="wheel"
+[ "$SEAT_MGR" != "elogind" ] && _GROUPS="wheel,seat"
+useradd -m -s /bin/bash -G "$_GROUPS" "$TARGET_USER"
+echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
+case "$ELEV" in
+    sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;
+    doas) printf 'permit persist :wheel\n' > /etc/doas.conf ;;
+esac
+
 # Network setup
 case "$NETWORK" in
     nm|nm-iwd)
         install_svc networkmanager NetworkManager
         if [ "$NETWORK" = "nm-iwd" ]; then
-            "$PM_CMD" iwd
+            $PM_CMD iwd
             mkdir -p /etc/NetworkManager/conf.d
             printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi-backend.conf
         fi
@@ -331,14 +324,6 @@ case "$NETWORK" in
         install_svc dhcpcd
         ;;
 esac
-
-# Firewall
-if [ "$USE_UFW" = "1" ]; then
-install_svc ufw
-ufw default deny incoming
-ufw default allow outgoing
-sed -i 's/ENABLED=no/ENABLED=yes/' /etc/ufw/ufw.conf
-fi
 
 # zram swap
 mkdir -p /etc/udev/rules.d

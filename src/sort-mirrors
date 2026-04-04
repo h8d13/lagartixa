@@ -2,11 +2,12 @@
 # sort-mirrors — fetch and rank Artix mirrors by speed
 # requires: jq, wget, pacman-contrib (rankmirrors)
 # usage: ./sort-mirrors [country_code] [top_n]
-#   country_code: filter by country (e.g. DE, FR, CZ) — omit for all
+#   country_code: filter by country (e.g. DE, FR, CZ) omit for all
 #   top_n: number of results to show (default: 10)
 #
 # example: ./sort-mirrors DE 5
 #          ./sort-mirrors "" 10
+# if happy with results: ./src/sort-mirrors DE 5 | doas tee /etc/pacman.d/mirrorlist
 
 COUNTRY="${1:-}"
 TOP_N="${2:-10}"

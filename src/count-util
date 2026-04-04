@@ -8,7 +8,7 @@
 if [ -z "$1" ]; then
     echo "# Top 20 packages by unique dependency count"
     for p in $(pacman -Qqe); do
-        echo "$(( $(pactree -u "$p" 2>/dev/null | wc -l) - 1 )) $p"
+        echo "$(( $(pactree -u "$p" 2>/dev/null | wc -l) - 1 ))   $p"
     done | sort -rn | head -20
 else
     pkg="$1"

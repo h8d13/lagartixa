@@ -24,6 +24,8 @@ sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
 
 > Careful `dd` might look frozen but is not, is flushing (depending on how slow is your disk/pc).
 
+This project aims to build a stage 1 and limit it's scope to this. This doesn't include Desktops/Window Managers, or any post initial configs.
+
 ---
 
 Ressources: 

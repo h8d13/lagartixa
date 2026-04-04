@@ -124,8 +124,9 @@ read -rsp "Confirm user password: " USER_PASSWORD_CONFIRM; nlp
 
 # HOST SIDE
 show_progress "Installing required packages on host..."
+PM_CMD="pacman -S --noconfirm --needed"
 # shellcheck disable=SC2086
-pacman -S $PKGS --noconfirm --needed
+"$PM_CMD" $PKGS
 # to adapt if using a different PM
 
 show_progress "Cleaning up previous installation attempts..."
@@ -265,14 +266,14 @@ echo "root:$ROOT_PASSWORD" | chpasswd
 
 # Kernel, bootloader & base packages
 echo "Installing kernel and base packages..."
-pacman -S --noconfirm \
+"$PM_CMD" \
     $KERNEL $FW \
     grub mkinitcpio \
     $ELEV \
     git \
     $EDITOR
 
-[ "$_KHEADERS" = "1" ] && pacman -S --noconfirm "${KERNEL}-headers"
+[ "$_KHEADERS" = "1" ] && "$PM_CMD" "${KERNEL}-headers"
 
 # User
 _GROUPS="wheel"
@@ -287,17 +288,17 @@ esac
 # Seat management (seatd 200MB cache lighter than elogind)
 if [ "$SEAT_MGR" = "elogind" ]; then
     case "$TARGET_INI" in
-        openrc) pacman -S --noconfirm elogind elogind-openrc; rc-update add elogind default ;;
-        runit)  pacman -S --noconfirm elogind elogind-runit;  ln -s /etc/runit/sv/elogind /etc/runit/runsvdir/default/ ;;
-        s6)     pacman -S --noconfirm elogind elogind-s6;     s6-rc-bundle-update add default elogind ;;
-        dinit)  pacman -S --noconfirm elogind elogind-dinit;  dinitctl enable elogind ;;
+        openrc) "$PM_CMD" elogind elogind-openrc; rc-update add elogind default ;;
+        runit)  "$PM_CMD" elogind elogind-runit;  ln -s /etc/runit/sv/elogind /etc/runit/runsvdir/default/ ;;
+        s6)     "$PM_CMD" elogind elogind-s6;     s6-rc-bundle-update add default elogind ;;
+        dinit)  "$PM_CMD" elogind elogind-dinit;  dinitctl enable elogind ;;
     esac
 else
     case "$TARGET_INI" in
-        openrc) pacman -S --noconfirm seatd seatd-openrc; rc-update add seatd default ;;
-        runit)  pacman -S --noconfirm seatd seatd-runit;  ln -s /etc/runit/sv/seatd /etc/runit/runsvdir/default/ ;;
-        s6)     pacman -S --noconfirm seatd seatd-s6;     s6-rc-bundle-update add default seatd ;;
-        dinit)  pacman -S --noconfirm seatd seatd-dinit;  dinitctl enable seatd ;;
+        openrc) "$PM_CMD" seatd seatd-openrc; rc-update add seatd default ;;
+        runit)  "$PM_CMD" seatd seatd-runit;  ln -s /etc/runit/sv/seatd /etc/runit/runsvdir/default/ ;;
+        s6)     "$PM_CMD" seatd seatd-s6;     s6-rc-bundle-update add default seatd ;;
+        dinit)  "$PM_CMD" seatd seatd-dinit;  dinitctl enable seatd ;;
     esac
     # elogind handles XDG_RUNTIME_DIR automatically seatd does not
     mkdir -p /etc/local.d
@@ -319,13 +320,13 @@ fi
 case "$NETWORK" in
     nm|nm-iwd)
         case "$TARGET_INI" in
-            openrc) pacman -S --noconfirm networkmanager-openrc; rc-update add NetworkManager default ;;
-            runit)  pacman -S --noconfirm networkmanager-runit;  ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/ ;;
-            s6)     pacman -S --noconfirm networkmanager-s6;     s6-rc-bundle-update add default NetworkManager ;;
-            dinit)  pacman -S --noconfirm networkmanager-dinit;  dinitctl enable NetworkManager ;;
+            openrc) "$PM_CMD" networkmanager-openrc; rc-update add NetworkManager default ;;
+            runit)  "$PM_CMD" networkmanager-runit;  ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/ ;;
+            s6)     "$PM_CMD" networkmanager-s6;     s6-rc-bundle-update add default NetworkManager ;;
+            dinit)  "$PM_CMD" networkmanager-dinit;  dinitctl enable NetworkManager ;;
         esac
         if [ "$NETWORK" = "nm-iwd" ]; then
-            pacman -S --noconfirm iwd
+            "$PM_CMD" iwd
             mkdir -p /etc/NetworkManager/conf.d
             printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi-backend.conf
         fi
@@ -333,16 +334,16 @@ case "$NETWORK" in
     iwd-dhcpc)
         # iwd handles WiFi only, dhcpcd covers ethernet
         case "$TARGET_INI" in
-            openrc) pacman -S --noconfirm iwd iwd-openrc dhcpcd dhcpcd-openrc
+            openrc) "$PM_CMD" iwd iwd-openrc dhcpcd dhcpcd-openrc
                     rc-update add iwd default
                     rc-update add dhcpcd default ;;
-            runit)  pacman -S --noconfirm iwd iwd-runit dhcpcd dhcpcd-runit
+            runit)  "$PM_CMD" iwd iwd-runit dhcpcd dhcpcd-runit
                     ln -s /etc/runit/sv/iwd   /etc/runit/runsvdir/default/
                     ln -s /etc/runit/sv/dhcpcd /etc/runit/runsvdir/default/ ;;
-            s6)     pacman -S --noconfirm iwd iwd-s6 dhcpcd dhcpcd-s6
+            s6)     "$PM_CMD" iwd iwd-s6 dhcpcd dhcpcd-s6
                     s6-rc-bundle-update add default iwd
                     s6-rc-bundle-update add default dhcpcd ;;
-            dinit)  pacman -S --noconfirm iwd iwd-dinit dhcpcd dhcpcd-dinit
+            dinit)  "$PM_CMD" iwd iwd-dinit dhcpcd dhcpcd-dinit
                     dinitctl enable iwd
                     dinitctl enable dhcpcd ;;
         esac
@@ -350,13 +351,13 @@ case "$NETWORK" in
     dhcpc)
         # dhcpcd covers ethernet only
         case "$TARGET_INI" in
-            openrc) pacman -S --noconfirm dhcpcd dhcpcd-openrc
+            openrc) "$PM_CMD" dhcpcd dhcpcd-openrc
                     rc-update add dhcpcd default ;;
-            runit)  pacman -S --noconfirm dhcpcd dhcpcd-runit
+            runit)  "$PM_CMD" dhcpcd dhcpcd-runit
                     ln -s /etc/runit/sv/dhcpcd /etc/runit/runsvdir/default/ ;;
-            s6)     pacman -S --noconfirm iwd iwd-s6 dhcpcd dhcpcd-s6
+            s6)     "$PM_CMD" iwd iwd-s6 dhcpcd dhcpcd-s6
                     s6-rc-bundle-update add default dhcpcd ;;
-            dinit)  pacman -S --noconfirm dhcpcd dhcpcd-dinit
+            dinit)  "$PM_CMD" dhcpcd dhcpcd-dinit
                     dinitctl enable dhcpcd ;;
         esac
         ;;
@@ -365,10 +366,10 @@ esac
 # Firewall
 if [ "$USE_UFW" = "1" ]; then
 case "$TARGET_INI" in
-    openrc) pacman -S --noconfirm ufw ufw-openrc; rc-update add ufw default ;;
-    runit)  pacman -S --noconfirm ufw ufw-runit;  ln -s /etc/runit/sv/ufw /etc/runit/runsvdir/default/ ;;
-    s6)     pacman -S --noconfirm ufw ufw-s6;     s6-rc-bundle-update add default ufw ;;
-    dinit)  pacman -S --noconfirm ufw ufw-dinit;  dinitctl enable ufw ;;
+    openrc) "$PM_CMD" ufw ufw-openrc; rc-update add ufw default ;;
+    runit)  "$PM_CMD" ufw ufw-runit;  ln -s /etc/runit/sv/ufw /etc/runit/runsvdir/default/ ;;
+    s6)     "$PM_CMD" ufw ufw-s6;     s6-rc-bundle-update add default ufw ;;
+    dinit)  "$PM_CMD" ufw ufw-dinit;  dinitctl enable ufw ;;
 esac
 ufw default deny incoming
 ufw default allow outgoing

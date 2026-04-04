@@ -39,7 +39,7 @@ https://github.com/archlinux/pacman-contrib
 
 MIRRORS: https://status.artixlinux.org/mirrors/status/
 
-> If you used mirrors to upgrade fully refresh after editing `/etc/pacman.d/mirrorlist` then `pacman -Syyu`
+> If you used archived mirrors, to upgrade fully refresh after editing `/etc/pacman.d/mirrorlist` then `pacman -Syyu`
 
 WIKIS: 
 https://wiki.artixlinux.org/ 

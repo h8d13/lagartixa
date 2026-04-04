@@ -227,6 +227,7 @@ install_svc() {
 
 echo "Initializing pacman keyring..."
 pacman-key --init
+$PM_CMD artix-keyring
 pacman-key --populate artix
 
 echo "Updating package databases..."
@@ -294,9 +295,12 @@ $PM_CMD \
 
 [ "$_KHEADERS" = "1" ] && $PM_CMD "${KERNEL}-headers"
 
-# User
+# Users/Perms
 _GROUPS="wheel"
-[ "$SEAT_MGR" != "elogind" ] && _GROUPS="wheel,seat"
+if [ "$SEAT_MGR" != "elogind" ]; then
+    groupadd -f seat
+    _GROUPS="wheel,seat"
+fi
 useradd -m -s /bin/bash -G "$_GROUPS" "$TARGET_USER"
 echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
 case "$ELEV" in

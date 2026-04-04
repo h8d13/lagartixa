@@ -169,7 +169,7 @@ sleep 1
 show_progress "Formatting filesystems..."
 mkfs.fat -F32 "$EFI_PART"
 case "$TARGET_FS" in
-    ext4)  mkfs.ext4  -F "$ROOT_PART" ;;
+    ext4)  mkfs.ext4  -F -E lazy_itable_init=1,lazy_journal_init=1 "$ROOT_PART" ;;
     btrfs) mkfs.btrfs -f "$ROOT_PART" ;;
     xfs)   mkfs.xfs   -f "$ROOT_PART" ;;
     f2fs)  mkfs.f2fs  -f "$ROOT_PART" ;;
@@ -302,6 +302,7 @@ if [ "$SEAT_MGR" != "elogind" ]; then
     _GROUPS="wheel,seat"
 fi
 useradd -m -s /bin/bash -G "$_GROUPS" "$TARGET_USER"
+[ "$SEAT_MGR" != "elogind" ] && usermod -aG seat "$TARGET_USER"
 echo "$TARGET_USER:$USER_PASSWORD" | chpasswd
 case "$ELEV" in
     sudo) sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers ;;

@@ -22,10 +22,11 @@ sudo ./test-image.sh        # default
 rm /tmp/artix-test.img      # reset img
 # flash or qemu/vmware
 sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
-# resize/create new parts as needed
+# bare-metal test
+sudo bash klartix.sh
 ```
 
-> Careful `dd` might look frozen but is not, is flushing (depending on how slow is your disk/pc).
+> Careful `dd` and other disk ops might look frozen but is not, is flushing (depending on how slow is your disk/pc).
 
 This project aims to build a stage 1 and limit it's scope to this. This doesn't include Desktops/Window Managers, or any post initial configs.
 
@@ -35,7 +36,12 @@ The program by default creates a `/dev/loop0` for install to be streamlined (the
 
 Ressources: 
 
-AIS: https://github.com/archlinux/arch-install-scripts
+Tools: https://github.com/archlinux/arch-install-scripts
+https://github.com/archlinux/pacman-contrib
+
+MIRRORS: https://status.artixlinux.org/mirrors/status/
+
+> If you used mirrors to upgrade fully refresh after editing `/etc/pacman.d/mirrorlist` then `pacman -Syyu`
 
 WIKIS: 
 https://wiki.artixlinux.org/ 

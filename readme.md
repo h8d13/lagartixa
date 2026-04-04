@@ -4,7 +4,7 @@ Dev rules:
 
 Bash only - only use libs available in the `base` ISO or small libs/deps, all stated in the source code.
 
-`bash >= 4, coreutils, wget, sed, gawk, tar, gzip, chroot, xz, zstd. arch-install-scripts, parted`
+`bash coreutils wget sed gawk tar gzip chroot xz zstd arch-install-scripts parted`
 
 No ISO needed -> bootstrap - Target: `x86_64` UEFI.
 

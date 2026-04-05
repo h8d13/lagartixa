@@ -25,7 +25,10 @@ set -e -u -o pipefail
 PACMAN_PACKAGES=(
   acl artix-mirrorlist brotli bzip2 coreutils curl e2fsprogs expat gawk gettext glibc gnupg gpgme grep icu keyutils krb5 libarchive libassuan libgcc libgpg-error libidn2 libnghttp2 libnghttp3 libngtcp2 libpsl libseccomp libssh2 libstdc++ libunistring libxml2 lz4 openssl pacman xz zlib zstd
 )
+# SC2206: word splitting is intentional here packages are space-separated tokens
+# shellcheck disable=SC2206
 BASIC_PACKAGES=(${PACMAN_PACKAGES[*]} filesystem)
+# shellcheck disable=SC2034
 EXTRA_PACKAGES=(coreutils bash grep gawk file tar sed)
 DEFAULT_REPO_URL="http://mirror1.artixlinux.org/repos"
 
@@ -35,12 +38,12 @@ cleanup() {
   ! mountpoint -q "$CLEANUP_DEST/dev" || LC_ALL=C umount -R "$CLEANUP_DEST/dev"
 }
 
-stderr() { 
-  echo "$@" >&2 
+stderr() {
+  echo "$@" >&2
 }
 
 debug() {
-  stderr "--- $@"
+  stderr "--- $*"
 }
 
 extract_href() {
@@ -55,9 +58,9 @@ fetch_file() {
   local FILEPATH=$1 status_code=
   shift
   if [[ -e "$FILEPATH" ]]; then
-    status_code=$(curl --progress-bar --write-out %{http_code} -L -z "$FILEPATH" -o "$FILEPATH" "$@")
+    status_code=$(curl --progress-bar --write-out '%{http_code}' -L -z "$FILEPATH" -o "$FILEPATH" "$@")
   else
-    status_code=$(curl --progress-bar --write-out %{http_code} -L -o "$FILEPATH" "$@")
+    status_code=$(curl --progress-bar --write-out '%{http_code}' -L -o "$FILEPATH" "$@")
   fi
 
   if [[ "$status_code" -eq 200 ]] ; then
@@ -69,24 +72,24 @@ fetch_file() {
 
 uncompress() {
   local FILEPATH=$1 DEST=$2
- 
+
   case "$FILEPATH" in
-    *.gz) 
+    *.gz)
       tar xzf "$FILEPATH" -C "$DEST";;
-    *.xz) 
+    *.xz)
       xz -dc "$FILEPATH" | tar x -C "$DEST";;
     *.zst)
       tar --zstd -xf "$FILEPATH" -C "$DEST";;
-    *) 
+    *)
       debug "Error: unknown package format: $FILEPATH"
       return 1;;
   esac
-}  
+}
 
 ###
 
 get_default_repo() {
-  echo $DEFAULT_REPO_URL
+  echo "$DEFAULT_REPO_URL"
 }
 
 get_repo_url() {
@@ -110,8 +113,10 @@ configure_pacman() {
 
 configure_minimal_system() {
   local DEST=$1
-  
+
   mkdir -p "$DEST/dev"
+  # SC2016: $1 is a literal crypt hash fragment, not a shell variable single quotes correct
+  # shellcheck disable=SC2016
   sed -ie 's/^root:.*$/root:$1$GT9AUpJe$oXANVIjIzcnmOpY07iaGi\/:14657::::::/' "$DEST/etc/shadow"
   touch "$DEST/etc/group"
   echo "bootstrap" > "$DEST/etc/hostname"
@@ -130,38 +135,45 @@ configure_minimal_system() {
 
 fetch_packages_list() {
   local REPO=$1
-  echo "$(fetch_repo_packages_list "$REPO")"
+  fetch_repo_packages_list "$REPO"
 }
 
 fetch_repo_packages_list() {
   local REPO=$1
-  
+
   debug "fetch packages list: $REPO/"
   fetch "$REPO/" | extract_href | awk -F"/" '{print $NF}' | sort -rn ||
     { debug "Error: cannot fetch packages list: $REPO"; return 1; }
 }
 
 install_pacman_packages() {
-  local BASIC_PACKAGES=$1 DEST=$2 DOWNLOAD_DIR=$3 SYSTEM_LIST=$4 WORLD_LIST=$5 GALAXY_LIST=$6
+  # shellcheck disable=SC2128
+  # shellcheck disable=SC2178
+  local BASIC_PACKAGES=$1 DEST=$2 DOWNLOAD_DIR=$3 SYSTEM_LIST=$4 WORLD_LIST=$5 GALAXY_LIST=$6  
+  # shellcheck disable=SC2128
   debug "pacman package and dependencies: $BASIC_PACKAGES"
-  
-  for PACKAGE in $BASIC_PACKAGES; do 
-    local ESC_PACKAGE=$(echo "$PACKAGE" | sed 's/\+/%2B/g')
+
+  # SC2128: word splitting intentional iterating space-separated package list
+  # shellcheck disable=SC2128
+  for PACKAGE in $BASIC_PACKAGES; do
+    local ESC_PACKAGE
+    ESC_PACKAGE="${PACKAGE//+/%2B}"
     local REGEX="^$ESC_PACKAGE-([a-zA-Z\d.:%]*)-([\d.]*)-(i686|x86_64|any)\.pkg\.tar\.(gz|xz|zst)$"
-    local FILE=$(echo "$SYSTEM_LIST" | grep -Pm1 "$REGEX")
+    local FILE
+    FILE=$(echo "$SYSTEM_LIST" | grep -Pm1 "$REGEX")
     local REPO=$SYSTEM_REPO
     test "$FILE" || { FILE=$(echo "$WORLD_LIST" | grep -Pm1 "$REGEX"); REPO=$WORLD_REPO; }
     test "$FILE" || { FILE=$(echo "$GALAXY_LIST" | grep -Pm1 "$REGEX"); REPO=$GALAXY_REPO; }
     test "$FILE" || { debug "Error: cannot find package: $PACKAGE"; return 1; }
     local FILEPATH="$DOWNLOAD_DIR/$FILE"
-    
+
     debug "download package: $FILE"
     [[ -f "$FILEPATH" ]] || fetch_file "$FILEPATH" "$REPO/$FILE"
     debug "uncompress package: $FILEPATH"
     uncompress "$FILEPATH" "$DEST"
   done
 }
-
+# shellcheck disable=SC2086
 install_packages() {
   local ARCH=$1 DEST=$2 PACKAGES=$3
   debug "install packages: $PACKAGES"
@@ -171,7 +183,7 @@ install_packages() {
   LC_ALL=C mount --rbind /dev "$DEST"/dev
   LC_ALL=C mount --make-rslave "$DEST"/dev
   LC_ALL=C chroot "$DEST" /usr/bin/pacman \
-    --noconfirm --arch $ARCH -Sy --overwrite='*' $PACKAGES
+    --noconfirm --arch "$ARCH" -Sy --overwrite='*' $PACKAGES
   LC_ALL=C umount -R "$DEST"/proc
   LC_ALL=C umount -R "$DEST"/sys
   LC_ALL=C umount -R "$DEST"/dev
@@ -208,34 +220,41 @@ main() {
       *) show_usage; return 1;;
     esac
   done
-  shift $(($OPTIND-1))
+  shift $(( OPTIND - 1 ))
   test $# -eq 1 || { show_usage; return 1; }
-  
+
   [[ -z "$INIT" ]] && INIT="openrc"
   [[ -z "$SEAT_MGR" ]] && SEAT_MGR="seatd"
   [[ -z "$ARCH" ]] && ARCH="x86_64"
   [[ -z "$REPO_URL" ]] && REPO_URL=$(get_default_repo "$ARCH")
-  
+
   local DEST=$1
-  local SYSTEM_REPO=$(get_repo_url system "$REPO_URL" "$ARCH")
-  local WORLD_REPO=$(get_repo_url world "$REPO_URL" "$ARCH")
-  local GALAXY_REPO=$(get_repo_url galaxy "$REPO_URL" "$ARCH")
+  local SYSTEM_REPO
+  local WORLD_REPO
+  local GALAXY_REPO
+  SYSTEM_REPO=$(get_repo_url system "$REPO_URL" "$ARCH")
+  WORLD_REPO=$(get_repo_url world "$REPO_URL" "$ARCH")
+  GALAXY_REPO=$(get_repo_url galaxy "$REPO_URL" "$ARCH")
   CLEANUP_DEST=$DEST
   trap cleanup EXIT
   [[ -z "$DOWNLOAD_DIR" ]] && DOWNLOAD_DIR=$(mktemp -d)
   mkdir -p "$DOWNLOAD_DIR"
-  [[ -z "$PRESERVE_DOWNLOAD_DIR" ]] && trap "rm -rf '$DOWNLOAD_DIR'" KILL TERM EXIT
+  # SC2173: KILL cannot be trapped, removed; EXIT handles cleanup
+  [[ -z "$PRESERVE_DOWNLOAD_DIR" ]] && trap 'rm -rf "$DOWNLOAD_DIR"' TERM EXIT
   debug "destination directory: $DEST"
   debug "system repository: $SYSTEM_REPO"
   debug "world repository: $WORLD_REPO"
   debug "galaxy repository: $GALAXY_REPO"
   debug "temporary directory: $DOWNLOAD_DIR"
-  
+
   # Fetch packages, install system and do a minimal configuration
   mkdir -p "$DEST"
-  local SYSTEM_LIST=$(fetch_packages_list $SYSTEM_REPO)
-  local WORLD_LIST=$(fetch_packages_list $WORLD_REPO)
-  local GALAXY_LIST=$(fetch_packages_list $GALAXY_REPO)
+  local SYSTEM_LIST
+  local WORLD_LIST
+  local GALAXY_LIST
+  SYSTEM_LIST=$(fetch_packages_list "$SYSTEM_REPO")
+  WORLD_LIST=$(fetch_packages_list "$WORLD_REPO")
+  GALAXY_LIST=$(fetch_packages_list "$GALAXY_REPO")
   install_pacman_packages "${BASIC_PACKAGES[*]}" "$DEST" "$DOWNLOAD_DIR" "$SYSTEM_LIST" "$WORLD_LIST" "$GALAXY_LIST"
   configure_pacman "$DEST" "$ARCH"
   configure_minimal_system "$DEST"
@@ -245,9 +264,9 @@ main() {
   configure_pacman "$DEST" "$ARCH" # Pacman must be re-configured
   cleanup_files "$DEST"
   [[ -z "$PRESERVE_DOWNLOAD_DIR" ]] && rm -rf "$DOWNLOAD_DIR"
-  
+
   debug "Done!"
-  debug 
+  debug
   debug "You may now chroot or artools-chroot from package artools-base:"
   debug "$ sudo artools-chroot $DEST"
 }

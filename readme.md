@@ -2,11 +2,11 @@
 
 [`Lagartixa`](./klartix.sh) is a single-script, config-driven stage 1+2 installer for [Artix Linux](https://artixlinux.org/).
 
-Wraps and modified [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-bootstrap/) (stage 1) and drives OS to a bootable, login-ready state: partitioning, filesystem, locale, users, seat manager, networking, hardware drivers, bootloader, services, and init system from any running Linux host. **No ISO needed.** and built for speed.
+Wraps and modified [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-bootstrap/) (stage 1) and drives OS to a bootable, login-ready state: partitioning, filesystem, locale, users, seat manager, networking, hardware drivers, bootloader, services, and init system from any running Linux host. **No ISO needed.**
 
 DE/WMs, and post-install config (stage 3) are out of scope. On purpose.
 
-Target: `x86_64` UEFI. One [config file](./default.conf). Everything is a variable. Minimal PoC made to hack on.
+Target: `x86_64` UEFI. One [config file](./default.conf). Everything is a variable. Minimal PoC made to be hacked on.
 
 ---
 

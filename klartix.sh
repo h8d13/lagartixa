@@ -60,17 +60,17 @@
 
 ###################################################################################################
 
-#       $$\                                          $$\     $$\                    
-#       $$ |                                         $$ |    \__|                   
-#       $$ | $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\ $$$$$$\   $$\ $$\   $$\ $$$$$$\  
-#       $$ | \____$$\ $$  __$$\  \____$$\ $$  __$$\\_$$  _|  $$ |\$$\ $$  |\____$$\ 
+#       $$\                                          $$\     $$\
+#       $$ |                                         $$ |    \__|
+#       $$ | $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\ $$$$$$\   $$\ $$\   $$\ $$$$$$\
+#       $$ | \____$$\ $$  __$$\  \____$$\ $$  __$$\\_$$  _|  $$ |\$$\ $$  |\____$$\
 #       $$ | $$$$$$$ |$$ /  $$ | $$$$$$$ |$$ |  \__| $$ |    $$ | \$$$$  / $$$$$$$ |
 #       $$ |$$  __$$ |$$ |  $$ |$$  __$$ |$$ |       $$ |$$\ $$ | $$  $$< $$  __$$ |
 #       $$ |\$$$$$$$ |\$$$$$$$ |\$$$$$$$ |$$ |       \$$$$  |$$ |$$  /\$$\\$$$$$$$ |
 #       \__| \_______| \____$$ | \_______|\__|        \____/ \__|\__/  \__|\_______|
-#                   $$\   $$ |                                                    
-#                   \$$$$$$  |                                                    
-#                   \______/                                                     
+#                   $$\   $$ |
+#                   \$$$$$$  |
+#                   \______/
 
 # Roughly in Portuguese tranlates to "small lizard" - "lagarto" + "ixa". And "lacertus" from latin.
 
@@ -264,10 +264,10 @@ sleep 1
 show_progress "Formatting filesystems..."
 mkfs.fat -F32 "$EFI_PART"
 case "$TARGET_FS" in
-ext4)   mkfs.ext4 -F "$ROOT_PART" ;;
-btrfs)  mkfs.btrfs -f "$ROOT_PART" ;;
-xfs)    mkfs.xfs -f "$ROOT_PART" ;;
-f2fs)   mkfs.f2fs -f "$ROOT_PART" ;;
+ext4) mkfs.ext4 -F "$ROOT_PART" ;;
+btrfs) mkfs.btrfs -f "$ROOT_PART" ;;
+xfs) mkfs.xfs -f "$ROOT_PART" ;;
+f2fs) mkfs.f2fs -f "$ROOT_PART" ;;
 esac
 
 # MOUNT
@@ -284,7 +284,7 @@ if [ -n "$MIRROR_URL" ]; then
 	info "Using mirror: $MIRROR_URL"
 	"$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 else
-    info "Using auto mirrors"
+	info "Using auto mirrors"
 	"$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 fi
 

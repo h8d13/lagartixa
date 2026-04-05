@@ -143,6 +143,15 @@ trap cleanup EXIT
 # PREFLIGHT
 [ "$(id -u)" -ne 0 ] && die "This script must be run as root."
 
+REQUIRED_BIN=(bash curl sed gawk tar gzip xz zstd parted)
+missing=()
+for cmd in "${REQUIRED_BIN[@]}"; do
+    command -v "$cmd" &>/dev/null && echo "Checked: $cmd OK." || missing+=("$cmd")
+done
+[ ${#missing[@]} -gt 0 ] && die "Missing required dependencies: ${missing[*]}"
+
+# PROMPTS
+## Target > Auth
 obanner "Klartix - Artix Linux Bootstrap Installer"
 nlp
 info "Current block devices:"
@@ -193,6 +202,7 @@ PM_CMD="pacman -S --noconfirm --needed"
 show_progress "Cleaning up previous installation attempts..."
 umount -R "$TARGET_MOUNT" 2>/dev/null || true
 
+# START
 TARGET_MOUNT="/mnt/artix"
 mkdir -p "$TARGET_MOUNT"
 
@@ -265,7 +275,6 @@ UUID=$EFI_UUID   /efi  vfat         defaults         0      2
 FSTAB
 
 # CHROOT CONFIG
-
 show_progress "Creating chroot configuration script..."
 cat > "$TARGET_MOUNT/configure.sh" << EOF
 #!/bin/bash

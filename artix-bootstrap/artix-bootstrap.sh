@@ -96,8 +96,6 @@ uncompress() {
 	esac
 }
 
-###
-
 get_default_repo() {
 	echo "$DEFAULT_REPO_URL"
 }

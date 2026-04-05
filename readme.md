@@ -47,12 +47,12 @@ sudo bash klartix.sh
 
 ## Resources
 
-- Mirrors: https://status.artixlinux.org/mirrors/status/
 - Artix Wiki: https://wiki.artixlinux.org/
-- artix-bootstrap: https://gitea.artixlinux.org/artix/artix-bootstrap/
+    - mirrors: https://status.artixlinux.org/mirrors/status/
+    - artix-bootstrap: https://gitea.artixlinux.org/artix/artix-bootstrap/
 - Gentoo Wiki: https://wiki.gentoo.org/wiki/Main_Page
 
-> Mirrors are archived snapshots. After install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
+> Mirrors are archived snapshots. If you use them, after install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
 
 Additional tools used during development are in [`src/`](./src/). Findings made during this project: [See here.](.github/finds.md)
 

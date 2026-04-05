@@ -1,7 +1,7 @@
 #!/bin/bash
 # SPDX-License-Identifier: 0BSD
 # SPDX-FileCopyrightText: 2026 h8d13
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC1090
 
 # Klartix - Artix Linux Bootstrap Installer
 
@@ -64,10 +64,12 @@
 
 ###################################################################################################
 
-# LOCATIONS
+# LOCATION
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# CONF FILE SRC 
-. "${SCRIPT_DIR}/default.conf"
+# CONF FILE SRC REL TO THIS SCRIPT
+CONF_FILE="${1:-${SCRIPT_DIR}/default.conf}" # fallback to default
+[ ! -f "$CONF_FILE" ] && { echo "[ERROR] Config file not found: $CONF_FILE" >&2; exit 1; }
+. "$CONF_FILE"
 
 # UTILS
 GREEN='\033[0;32m'
@@ -151,7 +153,8 @@ done
 [ ${#missing[@]} -gt 0 ] && die "Missing required dependencies: ${missing[*]}"
 
 # PROMPTS
-## Target > Auth
+## Target > Auth > Print CFG > Confirm
+
 obanner "Klartix - Artix Linux Bootstrap Installer"
 nlp
 info "Current block devices:"
@@ -168,10 +171,6 @@ cat default.conf
 nlp
 warn "WARNING: This will ERASE ALL DATA on $TARGET_DISK!"
 nlp
-read -rp "Continue with this disk? [y/N]: " confirm
-[[ ! "$confirm" =~ ^[Yy]$ ]] && { warn "Installation cancelled."; exit 0; }
-nlp
-
 cbanner "Klartix - Artix Linux Bootstrap Installer"
 nlp
 info "Target configuration:"

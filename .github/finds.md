@@ -14,11 +14,10 @@ We got rid of it by using `dhcpd` and `iwd` directly + `seatd` and patched said 
 245    install_packages "$ARCH" "$DEST" "base ${INIT}" # removed elogind to give choice ie seatd
 ```
 
-This code simply did not exist in artix-bootstrap meaning elogind was alwasy being pulled in eitherway
-So I added a `-s` flag for seat managers
+This code simply did not exist in artix-bootstrap meaning elogind was always being pulled in eitherway. So I added a `-s` flag for seat managers.
 
 There is a cool concept in the FOSS-OS (yes that's a lot of acronyms that look too similar) world. 
 Which I've come to name the 'leftovers'. This in it's essence is anything left in a file to rot somewhere because it's needed as part of a tool-chain or because it needs to "just work". But essentially this is often hidden documentation that can get annoying to figure out.
 
 The importance here is order of operations since we cannot do selections in a one shot isntaller.
-So seat manager needs to come before anything else has a chance to try to need `elogind`
+So seat manager needs to come before anything else has a chance to try to need `elogind` or a selection prompt. Similar to how certain DE's might require you to pick a `vulkan-type`. But earlier.

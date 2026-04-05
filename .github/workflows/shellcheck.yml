@@ -15,7 +15,7 @@ jobs:
       - name: Run shellcheck on scripts
         run: |
           shellcheck --severity=warning *.sh artix-bootstrap/*.sh
-          shfiles=$(find src -name '*.sh' 2>/dev/null)
+          shfiles=$(find src -type f 2>/dev/null)
           [ -n "$shfiles" ] && shellcheck --severity=warning $shfiles || true
 
       - name: Run shellcheck on conf

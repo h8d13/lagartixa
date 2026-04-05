@@ -5,7 +5,8 @@
 
 # Klartix - Artix Linux Bootstrap Installer
 
-# Script for my good friend Klagan who values not being on Systemd & minimalist approach
+# Script for my good friend Klagan who values low ressource/data usage & minimalist approach -sysd
+
 # Assumes x86_64, GPT/UEFI, and can run from any Linux distro
 # Does not need an ISO bootstraps directly from official tool
 

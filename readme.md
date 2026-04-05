@@ -17,14 +17,11 @@ Filesystem tools (based on `TARGET_FS`):
 
 No ISO needed -> bootstrap - Target: `x86_64` UEFI.
 
-One config file, EVERYTHING must be variables that can be matched to options, one script.
+One config [file](./default.conf), EVERYTHING must be variables that can be matched to options, one script.
 
-Goal is to show the minimal working PoC and to let the rest be user defined through conf. 
+Goal is to show the minimal working PoC and to let the rest be user, hacked on. 
 
-Testing: I mostly test from host straight, create a loop device, then copy `.img` output to a shitty USB.
-Reproducible through mirror choice, this means a build one day is the same the next.
-
-## Run
+Testing: 
 
 > Edit the `default.conf`
 

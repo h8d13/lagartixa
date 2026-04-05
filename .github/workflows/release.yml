@@ -1,0 +1,30 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set release tag
+        run: echo "TAG=snapshot-$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - name: Create release archive
+        run: |
+          tar -czf artixinstall-${{ env.TAG }}.tar.gz \
+            klartix.sh default.conf bootstrap/ src/ LICENSE readme.md
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: ${{ env.TAG }}
+          prerelease: true
+          files: artixinstall-${{ env.TAG }}.tar.gz

@@ -25,9 +25,9 @@ set -e -u -o pipefail
 
 # Packages needed by pacman (see get-pacman-dependencies.sh)
 PACMAN_PACKAGES=(
-	acl artix-mirrorlist brotli bzip2 coreutils curl e2fsprogs expat gawk gettext \
-	glibc gnupg gpgme grep icu keyutils krb5 libarchive libassuan libgcc \
-	libgpg-error libidn2 libnghttp2 libnghttp3 libngtcp2 libpsl libseccomp libssh2 \
+	acl artix-mirrorlist brotli bzip2 coreutils curl e2fsprogs expat gawk gettext
+	glibc gnupg gpgme grep icu keyutils krb5 libarchive libassuan libgcc
+	libgpg-error libidn2 libnghttp2 libnghttp3 libngtcp2 libpsl libseccomp libssh2
 	libstdc++ libunistring libxml2 lz4 openssl pacman xz zlib zstd
 )
 # SC2206: word splitting is intentional here packages are space-separated tokens
@@ -63,10 +63,10 @@ fetch_file() {
 	shift
 	if [[ -e "$FILEPATH" ]]; then
 		stat_c=$(curl --progress-bar --write-out '%{http_code}' \
-		-L -z "$FILEPATH" -o "$FILEPATH" "$@")
+			-L -z "$FILEPATH" -o "$FILEPATH" "$@")
 	else
 		stat_c=$(curl --progress-bar --write-out '%{http_code}' \
-		-L -o "$FILEPATH" "$@")
+			-L -o "$FILEPATH" "$@")
 	fi
 
 	if [[ "$stat_c" -eq 200 ]]; then
@@ -127,7 +127,7 @@ configure_minimal_system() {
 	mkdir -p "$DEST/dev"
 	# SC2016: $1 is a literal crypt hash fragment, single quotes correct
 	sed -ie 's/^root:.*$/root:$1$GT9AUpJe$oXANVIjIzcnmOpY07iaGi\/:14657::::::/' \
-	"$DEST/etc/shadow"
+		"$DEST/etc/shadow"
 
 	touch "$DEST/etc/group"
 	echo "bootstrap" >"$DEST/etc/hostname"
@@ -161,7 +161,7 @@ fetch_repo_packages_list() {
 }
 
 install_pacman_packages() {
-  	local BASIC_PACKAGES=$1 DEST=$2 DOWNLOAD_DIR=$3 SYSTEM_LIST=$4 WORLD_LIST=$5 GALAXY_LIST=$6
+	local BASIC_PACKAGES=$1 DEST=$2 DOWNLOAD_DIR=$3 SYSTEM_LIST=$4 WORLD_LIST=$5 GALAXY_LIST=$6
 	debug "pacman package and dependencies: $BASIC_PACKAGES"
 
 	# SC2128: word splitting intentional iterating space-separated package list

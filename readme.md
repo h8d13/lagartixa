@@ -36,7 +36,11 @@ sudo bash klartix.sh
 
 > Careful `dd` and might look frozen but is not, is flushing (depending on how slow is your disk/pc).
 
-This project aims to build a stage 1 and limit it's scope to this. This doesn't include Desktops/Window Managers, or any post initial configs.
+`Lagartixa` is a single-script, config-driven stage 2 installer for Artix Linux. And limits it's scope to this.
+
+It wraps (and modifies) `artix-bootstrap` official tool (stage 1) and drives the system to a bootable, login-ready state partitioning, filesystem, locale, users,seat manager, networking, hardware-drivers, bootloader, services and init system freedom.
+
+This doesn't include Desktops/Window Managers, or any post initial configs (stage 3). On purpose.
 
 ---
 

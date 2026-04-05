@@ -342,6 +342,8 @@ $PM_CMD \
     $EDITOR
 
 [ "$_KHEADERS" = "1" ] && $PM_CMD "${KERNEL}-headers"
+[ -n "$HW_GPU" ]   && $PM_CMD $HW_GPU
+[ -n "$HW_SOUND" ] && $PM_CMD $HW_SOUND
 
 # Users/Perms
 _GROUPS="wheel"

@@ -54,5 +54,5 @@ sudo bash klartix.sh
 
 > Mirrors are archived snapshots. After install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
 
-Additional tools used during development are in `src/`. Findings made during this project: [finds.md](.github/finds.md)
+Additional tools used during development are in [`src/`](./src/). Findings made during this project: [See here.](.github/finds.md)
 

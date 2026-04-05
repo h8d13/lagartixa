@@ -20,3 +20,9 @@ jobs:
 
       - name: Run shellcheck on conf
         run: shellcheck --shell=bash --severity=warning *.conf
+
+      - name: Check formatting with shfmt
+        run: |
+          shfmt -i 0 -l *.sh artix-bootstrap/*.sh
+          shfiles=$(find src -type f 2>/dev/null)
+          [ -n "$shfiles" ] && shfmt -i 0 -l $shfiles || true

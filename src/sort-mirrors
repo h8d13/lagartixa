@@ -17,7 +17,11 @@ JSON_URL="https://status.artixlinux.org/mirrors/status/json/"
 TMP=$(mktemp)
 TMP_MIRRORS=$(mktemp)
 
-curl -sSL -o "$TMP" "$JSON_URL" || { echo "Failed to fetch mirror data"; rm -f "$TMP" "$TMP_MIRRORS"; exit 1; }
+curl -sSL -o "$TMP" "$JSON_URL" || {
+	echo "Failed to fetch mirror data"
+	rm -f "$TMP" "$TMP_MIRRORS"
+	exit 1
+}
 
 jq_filter='
   .urls[]
@@ -28,19 +32,19 @@ jq_filter='
 '
 
 if [ -n "$COUNTRY" ]; then
-    jq_filter="${jq_filter} | select(.country_code == \"$COUNTRY\")"
+	jq_filter="${jq_filter} | select(.country_code == \"$COUNTRY\")"
 fi
 
-jq -r "[ ${jq_filter} ] | sort_by(.score) | .[:${TOP_N}][] | \"Server = \(.url)\$repo/os/\$arch\"" "$TMP" > "$TMP_MIRRORS"
+jq -r "[ ${jq_filter} ] | sort_by(.score) | .[:${TOP_N}][] | \"Server = \(.url)\$repo/os/\$arch\"" "$TMP" >"$TMP_MIRRORS"
 
 rm -f "$TMP"
 
 # add official1
-cat >> "$TMP_MIRRORS" << 'EOF'
+cat >>"$TMP_MIRRORS" <<'EOF'
 Server = https://mirror1.artixlinux.org/repos/$repo/os/$arch
 EOF
 
-echo "# Testing $(wc -l < "$TMP_MIRRORS") mirrors with rankmirrors..."
+echo "# Testing $(wc -l <"$TMP_MIRRORS") mirrors with rankmirrors..."
 echo ""
 echo "# Artix Linux Mirrorlist"
 echo "# Generated: $(date -u '+%Y-%m-%d %H:%M UTC')"

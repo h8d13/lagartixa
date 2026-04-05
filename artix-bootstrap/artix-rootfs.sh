@@ -8,8 +8,7 @@ set -e -u -o pipefail
 inits=('openrc' 'runit' 's6' 'dinit')
 
 rm -rf --one-file-system download
-for init in "${inits[@]}"
-do
+for init in "${inits[@]}"; do
 	./artix-bootstrap.sh -i "$init" -d download "rootfs-$init"
 	pushd "rootfs-$init"
 	rm var/cache/pacman/pkg/*
@@ -17,4 +16,3 @@ do
 	popd
 	rm -rf --one-file-system rootfs-$init
 done
-

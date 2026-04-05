@@ -11,53 +11,53 @@
 
 ###################################################################################################
 
-#                                                                       :--=:                        
-#                                  .                     .           ..--=====                       
-#                           :      *+  .:                           .+-==++==+                       
-#                                 .%*:==+.- .                      @#=****+===    .                  
-#                          .       .--==.==. ---= .-.            :=-***%#++=:+   -=:.*-:             
-#                                  -====++-+. =--+-.          .---+*+*+*+*+@@....-:=+:              
-#                         .=..=-. .----=--#*+==--::--         :-==++******#@: .+---=---+%= ..  -    
-#                .          :**+==-===-+==#*+====-:.          ==+++*****+*+*- ..-===++=:            
-#                                .--==:       .+=-::         .=++**##*##**+#=:.-=+=++*+*+.          
-#                                 :--=.         -=--:  .    ..-++*****#####*-.:-=+-  .::..#.        
-#                           .:  . .--=-         :----:.    ..:-+++*+**####*=..-==+........          
-#                                 .--==.        .----------:--=+=+++*####*=:.===+=........          
-#                                 ::-=--        .--==-=-===+===+**+**=+*==----=+==.  .. ...         
-#                                 :--=--.       .+*#****+-==+=++*+***+===+=====++*..  ...           
-#             +                   :--*=-:.       :++++***#-===++*=****%******+++=..-... .           
-#                             :  .:--=::-         .:::::=:===+++++*****##*+==-.   ::...             
-#                                .------:    :        ..:-=#++++=#****#*-        ..-...             
-#                                :---=---         ...:-=-=*++++++*****+:         ......:...         
-#                                :--====-.   ...::-=-====+**++++#***+=.          ...  . ...      .. 
-#          =                    :---==++=..:--==-====++++**+**+*#*#*=:          .. ..      .        
-#                               ----=======+===+++*****+***++**%##*+:          ....                 
-#                           .--=++++++***+++****+#*##***++=+#*###*+-.         .....                 
-#                      .:::+==++*+*++*+***+*+++*****++++*#*###%#**-.           .   .                
+#                                                                       :--=:
+#                                  .                     .           ..--=====
+#                           :      *+  .:                           .+-==++==+
+#                                 .%*:==+.- .                      @#=****+===    .
+#                          .       .--==.==. ---= .-.            :=-***%#++=:+   -=:.*-:
+#                                  -====++-+. =--+-.          .---+*+*+*+*+@@....-:=+:
+#                         .=..=-. .----=--#*+==--::--         :-==++******#@: .+---=---+%= ..  -
+#                .          :**+==-===-+==#*+====-:.          ==+++*****+*+*- ..-===++=:
+#                                .--==:       .+=-::         .=++**##*##**+#=:.-=+=++*+*+.
+#                                 :--=.         -=--:  .    ..-++*****#####*-.:-=+-  .::..#.
+#                           .:  . .--=-         :----:.    ..:-+++*+**####*=..-==+........
+#                                 .--==.        .----------:--=+=+++*####*=:.===+=........
+#                                 ::-=--        .--==-=-===+===+**+**=+*==----=+==.  .. ...
+#                                 :--=--.       .+*#****+-==+=++*+***+===+=====++*..  ...
+#             +                   :--*=-:.       :++++***#-===++*=****%******+++=..-... .
+#                             :  .:--=::-         .:::::=:===+++++*****##*+==-.   ::...
+#                                .------:    :        ..:-=#++++=#****#*-        ..-...
+#                                :---=---         ...:-=-=*++++++*****+:         ......:...
+#                                :--====-.   ...::-=-====+**++++#***+=.          ...  . ...      ..
+#          =                    :---==++=..:--==-====++++**+**+*#*#*=:          .. ..      .
+#                               ----=======+===+++*****+***++**%##*+:          ....
+#                           .--=++++++***+++****+#*##***++=+#*###*+-.         .....
+#                      .:::+==++*+*++*+***+*+++*****++++*#*###%#**-.           .   .
 #                    .::---=++*****########*****##*##%###%#%%%##*@:               :.:        .     .
-#                   :---=+=**##%%%#**###%%##*#####%#%%%%%%%%#*++:.                                  
-#                 .---+=+*#%%%%%@@%@%*+*%@%%%#%%%%%%%%%@%%#**+=.                                    
-#                :=-==+*######***###*###*+=#@@@%@@@@%%##***+=.                  .                   
-#          .   .:--=++#*=#*+=...=.=*#******+=+###******++=-.                                        
-#              -=+=+*#+*=.         .+-=*++++*--*+++++==:..                                          
-#            .---=**++-              -:--+=+*==.                                                    
-#            .-==+*=*         -   . .--==+**#*+.                                      .        .    
-#           .-==+**+               .-+**###*+=-                                                :    
-#           -=++**             ...:=**+*====-.                                      .           .   
-#        ..--=+**             =-+*+*=+=*=-:.::.        .                  .                   .     
-#         :-=+**             -=      -==-+-:  :                               .                     
-#        :-=+**                      .-= .+%-                              :              .         
-#       .==+*+                       .++    =                                                       
-#      .==+**                         =-                                                            
-#     :=++++                           .                                                            
-#   .:=+*=-                                             =                                           
-#   -=+*+.                                                                                          
-# .=+++=      .                                                                                     
-#:=+*+                                                                                   :          
-#=+++                                                                                               
-#++.     ..                                           .                                             
-#                                                                                                   
-                                                                                                    
+#                   :---=+=**##%%%#**###%%##*#####%#%%%%%%%%#*++:.
+#                 .---+=+*#%%%%%@@%@%*+*%@%%%#%%%%%%%%%@%%#**+=.
+#                :=-==+*######***###*###*+=#@@@%@@@@%%##***+=.                  .
+#          .   .:--=++#*=#*+=...=.=*#******+=+###******++=-.
+#              -=+=+*#+*=.         .+-=*++++*--*+++++==:..
+#            .---=**++-              -:--+=+*==.
+#            .-==+*=*         -   . .--==+**#*+.                                      .        .
+#           .-==+**+               .-+**###*+=-                                                :
+#           -=++**             ...:=**+*====-.                                      .           .
+#        ..--=+**             =-+*+*=+=*=-:.::.        .                  .                   .
+#         :-=+**             -=      -==-+-:  :                               .
+#        :-=+**                      .-= .+%-                              :              .
+#       .==+*+                       .++    =
+#      .==+**                         =-
+#     :=++++                           .
+#   .:=+*=-                                             =
+#   -=+*+.
+# .=+++=      .
+#:=+*+                                                                                   :
+#=+++
+#++.     ..                                           .
+#
+
 ###################################################################################################
 
 # Roughly in Portuguese tranlates to "small lizard" - "lagarto" + "ixa". And "lacertus" from latin.
@@ -68,7 +68,10 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # CONF FILE SRC REL TO THIS SCRIPT
 CONF_FILE="${1:-${SCRIPT_DIR}/default.conf}" # fallback to default
-[ ! -f "$CONF_FILE" ] && { echo "[ERROR] Config file not found: $CONF_FILE" >&2; exit 1; }
+[ ! -f "$CONF_FILE" ] && {
+	echo "[ERROR] Config file not found: $CONF_FILE" >&2
+	exit 1
+}
 . "$CONF_FILE"
 
 # UTILS
@@ -78,33 +81,36 @@ RED='\033[0;31m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-info()    { printf "${GREEN}[INFO]${RESET}  %s\n" "$*"; }
-warn()    { printf "${YELLOW}[WARN]${RESET}  %s\n" "$*"; }
-die()     { printf "${RED}[ERROR]${RESET} %s\n" "$*" >&2; exit 1; }
-nlp()     { echo; }
+info() { printf "${GREEN}[INFO]${RESET}  %s\n" "$*"; }
+warn() { printf "${YELLOW}[WARN]${RESET}  %s\n" "$*"; }
+die() {
+	printf "${RED}[ERROR]${RESET} %s\n" "$*" >&2
+	exit 1
+}
+nlp() { echo; }
 obanner() { printf "\n${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 cbanner() { printf "${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
-reop()    { printf "${BOLD}${GREEN}%s${RESET}\n" "$*"; }
+reop() { printf "${BOLD}${GREEN}%s${RESET}\n" "$*"; }
 
 # chroot wrapper match artix-bootstrap style
 run_chroot() {
-    local dest="$1"
-    shift
-    LC_ALL=C mount --types proc /proc "$dest/proc"
-    LC_ALL=C mount --rbind /sys "$dest/sys"
-    LC_ALL=C mount --make-rslave "$dest/sys"
-    LC_ALL=C mount --rbind /dev "$dest/dev"
-    LC_ALL=C mount --make-rslave "$dest/dev"
-    LC_ALL=C chroot "$dest" "$@"
-    local ret=$?
-    LC_ALL=C umount -R "$dest/proc"
-    LC_ALL=C umount -R "$dest/sys"
-    LC_ALL=C umount -R "$dest/dev"
-    return $ret
+	local dest="$1"
+	shift
+	LC_ALL=C mount --types proc /proc "$dest/proc"
+	LC_ALL=C mount --rbind /sys "$dest/sys"
+	LC_ALL=C mount --make-rslave "$dest/sys"
+	LC_ALL=C mount --rbind /dev "$dest/dev"
+	LC_ALL=C mount --make-rslave "$dest/dev"
+	LC_ALL=C chroot "$dest" "$@"
+	local ret=$?
+	LC_ALL=C umount -R "$dest/proc"
+	LC_ALL=C umount -R "$dest/sys"
+	LC_ALL=C umount -R "$dest/dev"
+	return $ret
 }
 
 # automatic count minus the next 2 uses
-TOTAL_STEPS=$(( $(grep -c 'show_progress' "$0") - 2 ))
+TOTAL_STEPS=$(($(grep -c 'show_progress' "$0") - 2))
 CURRENT_STEP=0
 # Empty vars prompted below
 TARGET_DISK=""
@@ -114,29 +120,29 @@ ROOT_PASSWORD=""
 
 # HELPERS
 show_progress() {
-    local step_desc="$1"
-    CURRENT_STEP=$((CURRENT_STEP + 1))
-    local percent=$((CURRENT_STEP * 100 / TOTAL_STEPS))
-    local bar_width=50
-    local filled=$((CURRENT_STEP * bar_width / TOTAL_STEPS))
-    local empty=$((bar_width - filled))
-    local bar=""
-    for _ in $(seq 1 "$filled"); do bar="${bar}█"; done
-    for _ in $(seq 1 "$empty");  do bar="${bar}░"; done
-    printf "\r\033[K"
-    printf "${GREEN}[%s]${RESET} %3d%% (%d/%d)\n" "$bar" "$percent" "$CURRENT_STEP" "$TOTAL_STEPS"
-    info "$step_desc"
+	local step_desc="$1"
+	CURRENT_STEP=$((CURRENT_STEP + 1))
+	local percent=$((CURRENT_STEP * 100 / TOTAL_STEPS))
+	local bar_width=50
+	local filled=$((CURRENT_STEP * bar_width / TOTAL_STEPS))
+	local empty=$((bar_width - filled))
+	local bar=""
+	for _ in $(seq 1 "$filled"); do bar="${bar}█"; done
+	for _ in $(seq 1 "$empty"); do bar="${bar}░"; done
+	printf "\r\033[K"
+	printf "${GREEN}[%s]${RESET} %3d%% (%d/%d)\n" "$bar" "$percent" "$CURRENT_STEP" "$TOTAL_STEPS"
+	info "$step_desc"
 }
 
 # CLEANUP TRAP
 cleanup() {
-    local exit_code=$?
-    [ -z "$TARGET_MOUNT" ] && return
-    if [ $exit_code -ne 0 ]; then
-        warn "Installation failed or interrupted cleaning up..."
-    fi
-    sync 2>/dev/null || true
-    umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
+	local exit_code=$?
+	[ -z "$TARGET_MOUNT" ] && return
+	if [ $exit_code -ne 0 ]; then
+		warn "Installation failed or interrupted cleaning up..."
+	fi
+	sync 2>/dev/null || true
+	umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
 }
 trap cleanup EXIT
 
@@ -148,7 +154,7 @@ trap cleanup EXIT
 REQUIRED_BIN=(bash curl sed gawk tar gzip xz zstd parted)
 missing=()
 for cmd in "${REQUIRED_BIN[@]}"; do
-    command -v "$cmd" &>/dev/null && echo "Checked: $cmd OK." || missing+=("$cmd")
+	command -v "$cmd" &>/dev/null && echo "Checked: $cmd OK." || missing+=("$cmd")
 done
 [ ${#missing[@]} -gt 0 ] && die "Missing required dependencies: ${missing[*]}"
 
@@ -179,19 +185,26 @@ echo "  Timezone:     $TARGET_TIMEZONE"
 echo "  Console KB:   $VCONSOLE_KB"
 nlp
 read -rp "Begin installation? [y/N]: " confirm
-[[ ! "$confirm" =~ ^[Yy]$ ]] && { warn "Installation cancelled."; exit 0; }
+[[ ! "$confirm" =~ ^[Yy]$ ]] && {
+	warn "Installation cancelled."
+	exit 0
+}
 nlp
 
 # CREDS
-read -rsp "Enter root password: " ROOT_PASSWORD; nlp
-read -rsp "Confirm root password: " ROOT_PASSWORD_CONFIRM; nlp
+read -rsp "Enter root password: " ROOT_PASSWORD
+nlp
+read -rsp "Confirm root password: " ROOT_PASSWORD_CONFIRM
+nlp
 [ "$ROOT_PASSWORD" != "$ROOT_PASSWORD_CONFIRM" ] && die "Root passwords do not match."
 [ -z "$ROOT_PASSWORD" ] && die "Root password cannot be empty."
 
 read -rp "Enter a username: " TARGET_USER
 [ -z "$TARGET_USER" ] && die "Username cannot be empty."
-read -rsp "Enter user password: " USER_PASSWORD; nlp
-read -rsp "Confirm user password: " USER_PASSWORD_CONFIRM; nlp
+read -rsp "Enter user password: " USER_PASSWORD
+nlp
+read -rsp "Confirm user password: " USER_PASSWORD_CONFIRM
+nlp
 [ "$USER_PASSWORD" != "$USER_PASSWORD_CONFIRM" ] && die "User passwords do not match."
 [ -z "$USER_PASSWORD" ] && die "User password cannot be empty."
 
@@ -211,9 +224,9 @@ wipefs -af "$TARGET_DISK"
 udevadm settle
 
 parted -s -a optimal "$TARGET_DISK" -- mklabel gpt \
-    mkpart EFI fat32 1MiB "$EFI_SIZE" \
-    set 1 esp on \
-    mkpart root "$TARGET_FS" "$EFI_SIZE" 100%
+	mkpart EFI fat32 1MiB "$EFI_SIZE" \
+	set 1 esp on \
+	mkpart root "$TARGET_FS" "$EFI_SIZE" 100%
 
 show_progress "Updating kernel partition table..."
 partprobe "${TARGET_DISK}"
@@ -222,9 +235,9 @@ sleep 2
 # PARTITIONS
 # hack to add the p for nvme/sdd device vs usb
 if [[ "$TARGET_DISK" == *"nvme"* ]] || [[ "$TARGET_DISK" == *"mmcblk"* ]] || [[ "$TARGET_DISK" == *"loop"* ]]; then
-    PART_PREFIX="p"
+	PART_PREFIX="p"
 else
-    PART_PREFIX=""
+	PART_PREFIX=""
 fi
 
 EFI_PART="${TARGET_DISK}${PART_PREFIX}1"
@@ -239,10 +252,10 @@ sleep 1
 show_progress "Formatting filesystems..."
 mkfs.fat -F32 "$EFI_PART"
 case "$TARGET_FS" in
-    ext4)  mkfs.ext4  -F -E lazy_itable_init=1,lazy_journal_init=1 "$ROOT_PART" ;;
-    btrfs) mkfs.btrfs -f "$ROOT_PART" ;;
-    xfs)   mkfs.xfs   -f "$ROOT_PART" ;;
-    f2fs)  mkfs.f2fs  -f "$ROOT_PART" ;;
+ext4) mkfs.ext4 -F -E lazy_itable_init=1,lazy_journal_init=1 "$ROOT_PART" ;;
+btrfs) mkfs.btrfs -f "$ROOT_PART" ;;
+xfs) mkfs.xfs -f "$ROOT_PART" ;;
+f2fs) mkfs.f2fs -f "$ROOT_PART" ;;
 esac
 
 # MOUNT
@@ -256,17 +269,17 @@ mount "$EFI_PART" "$TARGET_MOUNT/efi"
 BOOTSTRAP="$SCRIPT_DIR/artix-bootstrap/artix-bootstrap.sh"
 show_progress "Bootstrapping Artix Linux with $TARGET_INI..."
 if [ -n "$MIRROR_URL" ]; then
-    info "Using mirror: $MIRROR_URL"
-    "$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
+	info "Using mirror: $MIRROR_URL"
+	"$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 else
-    "$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
+	"$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 fi
 
 # FSTAB
 show_progress "Generating fstab..."
 ROOT_UUID=$(blkid -s UUID -o value "$ROOT_PART")
 EFI_UUID=$(blkid -s UUID -o value "$EFI_PART")
-cat > "$TARGET_MOUNT/etc/fstab" << FSTAB
+cat >"$TARGET_MOUNT/etc/fstab" <<FSTAB
 # <file system>                             <mount>  <type>       <options>        <dump> <pass>
 UUID=$ROOT_UUID  /     $TARGET_FS   defaults         0      1
 UUID=$EFI_UUID   /efi  vfat         defaults         0      2
@@ -275,7 +288,7 @@ FSTAB
 
 # CHROOT CONFIG
 show_progress "Creating chroot configuration script..."
-cat > "$TARGET_MOUNT/configure.sh" << EOF
+cat >"$TARGET_MOUNT/configure.sh" <<EOF
 #!/bin/bash
 set -e
 

@@ -31,7 +31,7 @@ Filesystem tools (resolved from `TARGET_FS`):
 
 Edit [`default.conf`](./default.conf), then:
 
-```shell
+```bash
 sudo ./test-image.sh        # creates /tmp/artix-test.img mounted at /dev/loop0
 rm /tmp/artix-test.img      # reset output img
 

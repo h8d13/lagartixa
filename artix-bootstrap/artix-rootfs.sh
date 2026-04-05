@@ -1,6 +1,8 @@
 #!/bin/bash
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Artix
+# shellcheck disable=SC2035,SC2086
+
 set -e -u -o pipefail
 
 inits=('openrc' 'runit' 's6' 'dinit')

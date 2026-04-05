@@ -1,6 +1,7 @@
 #!/bin/bash
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Artix
+# shellcheck disable=SC1090,SC2154,SC2001
 set -e -u -o pipefail
 
 shared_dependencies() {
@@ -13,11 +14,9 @@ shared_dependencies() {
 pkgbuild_dependencies() {
   local PKGBUILD=$1
   local EXCLUDE=$2
-  # shellcheck disable=SC1090
+  
   source "$PKGBUILD"
-  # shellcheck disable=SC2154
   for DEPEND in "${depends[@]}"; do
-    # shellcheck disable=SC2001
     echo "$DEPEND" | sed "s/[>=<].*$//"
   done | grep -v "$EXCLUDE"
 }

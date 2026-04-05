@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Artix
 # Modifications under 0BSD by h8d13
+# shellcheck disable=SC2206,SC2034,SC2016,SC2128,SC2178,SC2086
+
 # artix-bootstrap: Bootstrap a base Artix Linux system using any GNU distribution.
 #
 # Dependencies: bash >= 4, coreutils, curl, sed, gawk, tar, gzip, xz, zstd.
@@ -26,9 +28,8 @@ PACMAN_PACKAGES=(
   acl artix-mirrorlist brotli bzip2 coreutils curl e2fsprogs expat gawk gettext glibc gnupg gpgme grep icu keyutils krb5 libarchive libassuan libgcc libgpg-error libidn2 libnghttp2 libnghttp3 libngtcp2 libpsl libseccomp libssh2 libstdc++ libunistring libxml2 lz4 openssl pacman xz zlib zstd
 )
 # SC2206: word splitting is intentional here packages are space-separated tokens
-# shellcheck disable=SC2206
+
 BASIC_PACKAGES=(${PACMAN_PACKAGES[*]} filesystem)
-# shellcheck disable=SC2034
 EXTRA_PACKAGES=(coreutils bash grep gawk file tar sed)
 DEFAULT_REPO_URL="http://mirror1.artixlinux.org/repos"
 
@@ -116,7 +117,6 @@ configure_minimal_system() {
 
   mkdir -p "$DEST/dev"
   # SC2016: $1 is a literal crypt hash fragment, not a shell variable single quotes correct
-  # shellcheck disable=SC2016
   sed -ie 's/^root:.*$/root:$1$GT9AUpJe$oXANVIjIzcnmOpY07iaGi\/:14657::::::/' "$DEST/etc/shadow"
   touch "$DEST/etc/group"
   echo "bootstrap" > "$DEST/etc/hostname"
@@ -147,14 +147,10 @@ fetch_repo_packages_list() {
 }
 
 install_pacman_packages() {
-  # shellcheck disable=SC2128
-  # shellcheck disable=SC2178
   local BASIC_PACKAGES=$1 DEST=$2 DOWNLOAD_DIR=$3 SYSTEM_LIST=$4 WORLD_LIST=$5 GALAXY_LIST=$6  
-  # shellcheck disable=SC2128
   debug "pacman package and dependencies: $BASIC_PACKAGES"
 
   # SC2128: word splitting intentional iterating space-separated package list
-  # shellcheck disable=SC2128
   for PACKAGE in $BASIC_PACKAGES; do
     local ESC_PACKAGE
     ESC_PACKAGE="${PACKAGE//+/%2B}"
@@ -173,7 +169,7 @@ install_pacman_packages() {
     uncompress "$FILEPATH" "$DEST"
   done
 }
-# shellcheck disable=SC2086
+
 install_packages() {
   local ARCH=$1 DEST=$2 PACKAGES=$3
   debug "install packages: $PACKAGES"

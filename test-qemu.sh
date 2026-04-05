@@ -14,7 +14,6 @@ qemu-system-x86_64 \
     -machine q35,accel=kvm \
     -device intel-iommu \
     -cpu host \
-    -global mc146818rtc.lost_tick_policy=slew \
     -smp 2 \
     -m 2G \
     -drive if=pflash,format=raw,readonly=on,file="$OVMF_CODE" \

@@ -51,7 +51,7 @@ sudo bash klartix.sh
     - artix-bootstrap: https://gitea.artixlinux.org/artix/artix-bootstrap/
 - Gentoo Wiki: https://wiki.gentoo.org/wiki/Main_Page
 
-> Mirrors are archived snapshots (useful for reproducible builds). If you use them, after initial install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
+> Archive mirrors are snapshots (useful for reproducible builds). If you use them, after initial install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
 
 Additional tools used during development are in [`src/`](./src/). Findings made during this project: [See here.](.github/finds.md)
 

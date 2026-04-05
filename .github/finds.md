@@ -9,7 +9,7 @@ We got rid of it by using `dhcpd` and `iwd` directly + `seatd` and patched said 
 
 ## Even worse chains
 
-```
+```bash
 244 +  install_packages "$ARCH" "$DEST" "${SEAT_MGR}-${INIT}" # pin init-logind provider before base resolves it                
 245    install_packages "$ARCH" "$DEST" "base ${INIT}" # removed elogind to give choice ie seatd
 ```

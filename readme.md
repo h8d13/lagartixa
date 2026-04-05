@@ -2,7 +2,7 @@
 
 [`Lagartixa`](./klartix.sh) is a single-script, config-driven stage 1+2 installer for [Artix Linux](https://artixlinux.org/).
 
-Wraps [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-bootstrap/) (stage 1) and drives the system to a bootable, login-ready state: partitioning, filesystem, locale, users, seat manager, networking, hardware drivers, bootloader, services, and init system from any running Linux host. No ISO needed.
+Wraps and modified [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-bootstrap/) (stage 1) and drives OS to a bootable, login-ready state: partitioning, filesystem, locale, users, seat manager, networking, hardware drivers, bootloader, services, and init system from any running Linux host. **No ISO needed.** and built for speed.
 
 DE/WMs, and post-install config (stage 3) are out of scope. On purpose.
 
@@ -49,10 +49,11 @@ sudo bash klartix.sh
 
 - Mirrors: https://status.artixlinux.org/mirrors/status/
 - Artix Wiki: https://wiki.artixlinux.org/
-- Gentoo Wiki: https://wiki.gentoo.org/wiki/Main_Page
 - artix-bootstrap: https://gitea.artixlinux.org/artix/artix-bootstrap/
+- Gentoo Wiki: https://wiki.gentoo.org/wiki/Main_Page
 
 > Mirrors are archived snapshots. After install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
 
 Additional tools used during development are in [`src/`](./src/). Findings made during this project: [See here.](.github/finds.md)
 
+---

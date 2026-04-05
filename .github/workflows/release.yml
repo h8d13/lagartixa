@@ -19,7 +19,7 @@ jobs:
       - name: Create release archive
         run: |
           tar -czf artixinstall-${{ env.TAG }}.tar.gz \
-            klartix.sh default.conf bootstrap/ src/ LICENSE readme.md
+            klartix.sh default.conf bootstrap/ src/ LICENSE README.md
 
       - name: Publish release
         uses: softprops/action-gh-release@v2

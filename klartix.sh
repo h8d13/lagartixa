@@ -252,7 +252,7 @@ sleep 1
 show_progress "Formatting filesystems..."
 mkfs.fat -F32 "$EFI_PART"
 case "$TARGET_FS" in
-ext4) mkfs.ext4 -F -E lazy_itable_init=1,lazy_journal_init=1 "$ROOT_PART" ;;
+ext4) mkfs.ext4 -F "$ROOT_PART" ;;
 btrfs) mkfs.btrfs -f "$ROOT_PART" ;;
 xfs) mkfs.xfs -f "$ROOT_PART" ;;
 f2fs) mkfs.f2fs -f "$ROOT_PART" ;;
@@ -266,12 +266,13 @@ mkdir -p "$TARGET_MOUNT/efi"
 mount "$EFI_PART" "$TARGET_MOUNT/efi"
 
 # BOOTSTRAP
-BOOTSTRAP="$SCRIPT_DIR/artix-bootstrap/artix-bootstrap.sh"
-show_progress "Bootstrapping Artix Linux with $TARGET_INI..."
+BOOTSTRAP="$SCRIPT_DIR/bootstrap/artix-bootstrap.sh"
+show_progress "Bootstrapping $TARGET_INI and $SEAT_MGR"
 if [ -n "$MIRROR_URL" ]; then
 	info "Using mirror: $MIRROR_URL"
 	"$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 else
+    info "Using auto mirrors"
 	"$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
 fi
 
@@ -286,7 +287,7 @@ UUID=$EFI_UUID   /efi  vfat         defaults         0      2
 /dev/zram0                                  none     swap         defaults,pri=100 0      0
 FSTAB
 
-# CHROOT CONFIG
+# CHROOT CONFIG STAGE 2
 show_progress "Creating chroot configuration script..."
 cat >"$TARGET_MOUNT/configure.sh" <<EOF
 #!/bin/bash

@@ -462,6 +462,13 @@ rm "$TARGET_MOUNT/configure.sh"
 
 show_progress "Syncing and unmounting..."
 sync
+# Kill any processes still using the chroot before unmounting
+fuser -km "$TARGET_MOUNT" 2>/dev/null || true
+sleep 1
+umount -R "$TARGET_MOUNT/dev" 2>/dev/null || umount -Rl "$TARGET_MOUNT/dev" 2>/dev/null || true
+umount -R "$TARGET_MOUNT/sys" 2>/dev/null || umount -Rl "$TARGET_MOUNT/sys" 2>/dev/null || true
+umount -R "$TARGET_MOUNT/proc" 2>/dev/null || umount -Rl "$TARGET_MOUNT/proc" 2>/dev/null || true
+umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
 
 nlp
 reop "=== Klartix installation complete! ==="

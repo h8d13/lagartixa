@@ -5,7 +5,7 @@
 
 # Klartix - Artix Linux Bootstrap Installer
 
-# Script for my good friend Klagan who values not being on Systemd & Minimalism approach
+# Script for my good friend Klagan who values not being on Systemd & minimalist approach
 # Assumes x86_64, GPT/UEFI, and can run from any Linux distro
 # Does not need an ISO bootstraps directly from official tool
 
@@ -59,6 +59,18 @@
 #
 
 ###################################################################################################
+
+#       $$\                                          $$\     $$\                    
+#       $$ |                                         $$ |    \__|                   
+#       $$ | $$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\ $$$$$$\   $$\ $$\   $$\ $$$$$$\  
+#       $$ | \____$$\ $$  __$$\  \____$$\ $$  __$$\\_$$  _|  $$ |\$$\ $$  |\____$$\ 
+#       $$ | $$$$$$$ |$$ /  $$ | $$$$$$$ |$$ |  \__| $$ |    $$ | \$$$$  / $$$$$$$ |
+#       $$ |$$  __$$ |$$ |  $$ |$$  __$$ |$$ |       $$ |$$\ $$ | $$  $$< $$  __$$ |
+#       $$ |\$$$$$$$ |\$$$$$$$ |\$$$$$$$ |$$ |       \$$$$  |$$ |$$  /\$$\\$$$$$$$ |
+#       \__| \_______| \____$$ | \_______|\__|        \____/ \__|\__/  \__|\_______|
+#                   $$\   $$ |                                                    
+#                   \$$$$$$  |                                                    
+#                   \______/                                                     
 
 # Roughly in Portuguese tranlates to "small lizard" - "lagarto" + "ixa". And "lacertus" from latin.
 
@@ -252,10 +264,10 @@ sleep 1
 show_progress "Formatting filesystems..."
 mkfs.fat -F32 "$EFI_PART"
 case "$TARGET_FS" in
-ext4) mkfs.ext4 -F "$ROOT_PART" ;;
-btrfs) mkfs.btrfs -f "$ROOT_PART" ;;
-xfs) mkfs.xfs -f "$ROOT_PART" ;;
-f2fs) mkfs.f2fs -f "$ROOT_PART" ;;
+ext4)   mkfs.ext4 -F "$ROOT_PART" ;;
+btrfs)  mkfs.btrfs -f "$ROOT_PART" ;;
+xfs)    mkfs.xfs -f "$ROOT_PART" ;;
+f2fs)   mkfs.f2fs -f "$ROOT_PART" ;;
 esac
 
 # MOUNT

@@ -11,13 +11,13 @@ Install
 Examples
 =========
 
-Create a base artix distribution in directory 'myartix':
+Create a base artix distribution in directory `myartix`:
 
     # artix-bootstrap myartix
 
-The same but use init openrc and a given repository source:
+The same but use init `openrc`, seat manager `seatd` and a given repository source:
 
-    # artix-bootstrap -i openrc -r "http://mirror1.artixlinux.org/repos" myartix
+    # artix-bootstrap -i openrc -r -s seatd "http://mirror1.artixlinux.org/repos" myartix
 
 Usage
 =====

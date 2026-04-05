@@ -20,7 +20,7 @@ Filesystem tools (resolved from `TARGET_FS`):
 
 | Filesystem | Tool |
 |------------|------|
-| `ext4` | — |
+| `ext4` | - |
 | `btrfs` | `btrfs-progs` |
 | `xfs` | `xfsprogs` |
 | `f2fs` | `f2fs-tools` |

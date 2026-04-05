@@ -220,12 +220,12 @@ show_usage() {
 main() {
 	# Process arguments and options
 	test $# -eq 0 && set -- "-h"
-	local INIT=
-	local SEAT_MGR=
-	local ARCH=
-	local REPO_URL=
-	local DOWNLOAD_DIR=
-	local PRESERVE_DOWNLOAD_DIR=
+	local INIT=""
+	local SEAT_MGR=""
+	local ARCH=""
+	local REPO_URL=""
+	local DOWNLOAD_DIR=""
+	local PRESERVE_DOWNLOAD_DIR=""
 
 	while getopts "qi:s:r:d:h" ARG; do
 		case "$ARG" in

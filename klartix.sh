@@ -119,7 +119,11 @@ run_chroot() {
 	LC_ALL=C mount --make-rslave "$dest/dev"
 	LC_ALL=C chroot "$dest" "$@"
 	local ret=$?
-	fuser -km "$dest/dev" 2>/dev/null || true
+	# Kill only processes rooted inside the chroot, not host processes with open files there
+	for pid in /proc/*/root; do
+		[ "$(readlink "$pid")" = "$dest" ] || continue
+		kill -9 "${pid%/root}" 2>/dev/null || true
+	done
 	sleep 1
 	LC_ALL=C umount -R "$dest/proc" 2>/dev/null || LC_ALL=C umount -Rl "$dest/proc" 2>/dev/null || true
 	LC_ALL=C umount -R "$dest/sys" 2>/dev/null || LC_ALL=C umount -Rl "$dest/sys" 2>/dev/null || true

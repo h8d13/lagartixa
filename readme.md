@@ -39,7 +39,7 @@ rm /tmp/artix-test.img      # reset output img
 sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
 ./test-qemu.sh
 
-# bare-metal pick disk at prompt
+# bare-metal pick target disk directly
 sudo bash klartix.sh
 ```
 

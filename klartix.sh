@@ -106,6 +106,9 @@ cbanner() { printf "${BOLD}${GREEN}=== %s ===${RESET}\n" "$*"; }
 reop() { printf "${BOLD}${GREEN}%s${RESET}\n" "$*"; }
 
 # chroot wrapper match artix-bootstrap style
+# ours has to be a bit more aggressive because
+# we run processes such as grub-install
+
 run_chroot() {
 	local dest="$1"
 	shift
@@ -116,9 +119,11 @@ run_chroot() {
 	LC_ALL=C mount --make-rslave "$dest/dev"
 	LC_ALL=C chroot "$dest" "$@"
 	local ret=$?
-	LC_ALL=C umount -R "$dest/proc"
-	LC_ALL=C umount -R "$dest/sys"
-	LC_ALL=C umount -R "$dest/dev"
+	fuser -km "$dest/dev" 2>/dev/null || true
+	sleep 1
+	LC_ALL=C umount -R "$dest/proc" 2>/dev/null || LC_ALL=C umount -Rl "$dest/proc" 2>/dev/null || true
+	LC_ALL=C umount -R "$dest/sys" 2>/dev/null || LC_ALL=C umount -Rl "$dest/sys" 2>/dev/null || true
+	LC_ALL=C umount -R "$dest/dev" 2>/dev/null || LC_ALL=C umount -Rl "$dest/dev" 2>/dev/null || true
 	return $ret
 }
 
@@ -476,12 +481,6 @@ rm "$TARGET_MOUNT/configure.sh"
 
 show_progress "Syncing and unmounting..."
 sync
-# Kill any processes still using the chroot before unmounting
-fuser -km "$TARGET_MOUNT" 2>/dev/null || true
-sleep 1
-umount -R "$TARGET_MOUNT/dev" 2>/dev/null || umount -Rl "$TARGET_MOUNT/dev" 2>/dev/null || true
-umount -R "$TARGET_MOUNT/sys" 2>/dev/null || umount -Rl "$TARGET_MOUNT/sys" 2>/dev/null || true
-umount -R "$TARGET_MOUNT/proc" 2>/dev/null || umount -Rl "$TARGET_MOUNT/proc" 2>/dev/null || true
 umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
 
 nlp

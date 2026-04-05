@@ -6,7 +6,7 @@ Wraps and modified [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-
 
 DE/WMs, and post-install config (stage 3) are out of scope. On purpose.
 
-Target: `x86_64` UEFI. One [config file](./default.conf). Everything is a variable. Minimal PoC made to be hacked on.
+Target: `x86_64` UEFI. One [config file](./default.conf). Everything is a variable. Minimal PoC made to be _hacked_ on.
 
 ---
 

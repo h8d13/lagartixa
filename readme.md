@@ -1,64 +1,58 @@
 # Lagartixa
 
-Dev rules: 
+[`Lagartixa`](./klartix.sh) is a single-script, config-driven stage 1+2 installer for [Artix Linux](https://artixlinux.org/).
 
-Bash only - only use libs available in the `base` ISO or small libs/deps, all stated in the source code.
+Wraps [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-bootstrap/) (stage 1) and drives the system to a bootable, login-ready state: partitioning, filesystem, locale, users, seat manager, networking, hardware drivers, bootloader, services, and init system from any running Linux host. No ISO needed.
 
-`bash coreutils curl sed gawk tar gzip xz zstd parted`
+DE/WMs, and post-install config (stage 3) are out of scope. On purpose.
 
-No ISO needed -> bootstrap - Target: `x86_64` UEFI.
+Target: `x86_64` UEFI. One [config file](./default.conf). Everything is a variable. Minimal PoC made to hack on.
 
 ---
 
-Filesystem tools (based on `TARGET_FS`):
+## Dependencies
+
+Bash only — libs available in `base` or explicitly listed below:
+
+`bash coreutils curl sed gawk tar gzip xz zstd parted`
+
+Filesystem tools (resolved from `TARGET_FS`):
 
 | Filesystem | Tool |
 |------------|------|
-| `ext4` | - |
+| `ext4` | — |
 | `btrfs` | `btrfs-progs` |
 | `xfs` | `xfsprogs` |
 | `f2fs` | `f2fs-tools` |
 
-Intentionally simple `EFI + /`: One config [file](./default.conf), EVERYTHING must be variables that can be matched to options, one script.
+---
 
-Goal was to show the minimal working PoC and to let the rest be user, hacked on. 
+## Setup / Testing
 
-[`Lagartixa`](./klartix.sh) is a single-script, config-driven stage 2 installer for [Artix Linux](https://artixlinux.org/). And limits it's scope to this.
-
-It wraps (and modifies) [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-bootstrap/) official tool and drives the system to a bootable, login-ready state partitioning, filesystem, locale, users, seat manager, networking, hardware-drivers, bootloader, services and init system freedom.
-
-This doesn't include Desktops/Window Managers, or any post initial configs (stage 3). On purpose.
-
-## Setup / Testing: 
-
-> Edit the [`default.conf`](./default.conf)
+Edit [`default.conf`](./default.conf), then:
 
 ```shell
-sudo ./test-image.sh        # default creates /dev/loop0 
+sudo ./test-image.sh        # creates /tmp/artix-test.img mounted at /dev/loop0
 rm /tmp/artix-test.img      # reset output img
-# flash or test in qemu/vmware see test-qemu.sh
-# bare-metal pick disk direcly
+
+# flash or test in qemu/vmware
 sudo dd if=/tmp/artix-test.img of=/dev/sdX bs=4M status=progress conv=fsync
-# can also be used on a disk target directly
+./test-qemu.sh
+
+# bare-metal pick disk at prompt
 sudo bash klartix.sh
 ```
 
-> Careful `dd` and might look frozen but is not, is flushing (depending on how slow is your disk/pc).
-
 ---
 
-## Ressources: 
+## Resources
 
-Findings that were made during this project: See [here](.github/finds.md)
+- Mirrors: https://status.artixlinux.org/mirrors/status/
+- Artix Wiki: https://wiki.artixlinux.org/
+- Gentoo Wiki: https://wiki.gentoo.org/wiki/Main_Page
+- artix-bootstrap: https://gitea.artixlinux.org/artix/artix-bootstrap/
 
-MIRRORS: https://status.artixlinux.org/mirrors/status/
+> Mirrors are archived snapshots. After install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
 
-> Archived mirrors, to upgrade fully refresh after editing `/etc/pacman.d/mirrorlist` then `pacman -Syyu`
-
-I have also included some tools I've used in `src/`
-
-WIKIS: 
-https://wiki.artixlinux.org/ 
-https://wiki.gentoo.org/wiki/Main_Page
-https://gitea.artixlinux.org/artix/artix-bootstrap/
+Additional tools used during development are in `src/`. Findings made during this project: [finds.md](.github/finds.md)
 

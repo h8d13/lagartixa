@@ -74,6 +74,7 @@
 #                   \______/
 
 # Roughly in Portuguese tranlates to "small lizard" - "lagarto" + "ixa". And "lacertus" from latin.
+# This script is in charge of anything bootstrap tool didn't do for a stage 2.. not all tested yet.
 
 ###################################################################################################
 

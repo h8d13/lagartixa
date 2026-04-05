@@ -12,7 +12,7 @@ Target: `x86_64` UEFI. One [config file](./default.conf). Everything is a variab
 
 ## Dependencies
 
-Bash only - libs available in `base` or explicitly listed below:
+Bash only - libs available in ISO/`base` or explicitly listed below:
 
 `bash coreutils curl sed gawk tar gzip xz zstd parted`
 

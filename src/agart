@@ -1,4 +1,6 @@
 #!/bin/bash
 [ "$(id -u)" -eq 0 ] && echo "Should not be run as root." && exit 1
-exec ./lixa/"$*"
+# shellcheck disable=SC2068,SC2145
+dir=$(dirname "$(readlink -f "$0")")
+exec "$dir/lixa/$@"
 # thin wrapper only checks userspace, scripts themselves should handle elev

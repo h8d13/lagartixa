@@ -372,10 +372,10 @@ echo "root:$ROOT_PASSWORD" | chpasswd
 echo "Installing kernel and base packages..."
 $PM_CMD \
 	$HW_CPU \
-    $KERNEL $FW \
+    $KERNEL \
+    $FW \
     grub mkinitcpio \
     $ELEV \
-    git \
     $EDITOR
 
 [ "$_KHEADERS" = "1" ] && $PM_CMD "${KERNEL}-headers"

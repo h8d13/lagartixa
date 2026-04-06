@@ -292,9 +292,6 @@ main() {
 	[[ -z "$PRESERVE_DOWNLOAD_DIR" ]] && rm -rf "$DOWNLOAD_DIR"
 
 	debug "Done!"
-	debug
-	debug "You may now chroot or artools-chroot from package artools-base:"
-	debug "$ sudo artools-chroot $DEST"
 }
 
 main "$@"

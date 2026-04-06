@@ -328,12 +328,14 @@ enable_svc() {
         dinit)  dinitctl enable "\$1" ;;
     esac
 }
-# install_svc <pkg> [svcname]  — installs pkg + pkg-$TARGET_INI then enables the service
+# install_svc <pkg> installs pkg + pkg-$TARGET_INI then enables the service
 install_svc() {
     local pkg="\$1" svc="\${2:-\$1}"
     $PM_CMD "\$pkg" "\$pkg-$TARGET_INI"
     enable_svc "\$svc"
 }
+
+sed -i 's/#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
 
 echo "Initializing pacman keyring..."
 pacman-key --init
@@ -522,7 +524,7 @@ fi
 
 show_progress "Cleaning up configuration script and cache..."
 rm "$TARGET_MOUNT/configure.sh"
-rm -rf "$DEST/var/cache/pacman/pkg/*"
+rm -fr "$TARGET_MOUNT/var/cache/pacman/pkg/*"
 INSTALL_OK=1
 
 show_progress "Syncing and unmounting..."

@@ -29,6 +29,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: latest
+          name: Release
           make_latest: true
           files: ${{ env.VER }}-${{ env.TAG }}.tar.gz

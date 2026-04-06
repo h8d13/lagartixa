@@ -520,9 +520,9 @@ if [ "${GRIMAUR:-0}" = "1" ]; then
 		sed -i 's/^#\?PACMAN_AUTH=.*/PACMAN_AUTH=(doas)/' /etc/makepkg.conf
 fi
 
-show_progress "Cleaning up configuration script..."
+show_progress "Cleaning up configuration script and cache..."
 rm "$TARGET_MOUNT/configure.sh"
-
+rm -rf "$DEST/var/cache/pacman/pkg/*"
 INSTALL_OK=1
 
 show_progress "Syncing and unmounting..."

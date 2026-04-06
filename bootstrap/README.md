@@ -17,7 +17,7 @@ Create a base artix distribution in directory `myartix`:
 
 The same but use init `openrc`, seat manager `seatd` and a given repository source:
 
-    # artix-bootstrap -i openrc -r -s seatd "http://mirror1.artixlinux.org/repos" myartix
+    # artix-bootstrap -i openrc -s seatd -r "http://mirror1.artixlinux.org/repos" myartix
 
 Usage
 =====

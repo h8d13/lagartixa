@@ -12,7 +12,7 @@ Target: `x86_64` UEFI. One [config file](./default.conf). Everything is a variab
 
 ## Dependencies
 
-Bash only (aside from grimaur) libs available in ISO/`base` or explicitly listed below:
+Bash only - libs available in ISO/`base` or explicitly listed below:
 
 `bash coreutils curl sed gawk tar gzip xz zstd parted`
 
@@ -54,5 +54,6 @@ sudo ./klartix.sh
 > Archive mirrors are snapshots (useful for reproducible builds). If you use them, after initial install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
 
 Additional tools used during development are in [`src/`](./src/). Findings made during this project: [See here.](.github/finds.md)
+Notably a patched version of `grimaur` that cheks for `systemd` libs.
 
 ---

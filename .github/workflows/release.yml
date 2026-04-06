@@ -25,6 +25,13 @@ jobs:
           tar -czf ${{ env.VER }}.tar.gz \
             klartix.sh default.conf bootstrap/ src/ LICENSE README.md
 
+      - name: Delete existing latest tag
+        run: |
+          git push origin :refs/tags/latest || true
+          gh release delete latest --yes || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:

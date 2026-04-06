@@ -529,6 +529,9 @@ show_progress "Syncing and unmounting..."
 sync
 umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
 
+# sanity check
+mount | grep "artix"
+
 nlp
 if [ "${INSTALL_OK:-0}" -eq 1 ]; then
 	reop "=== Klartix installation complete! ==="

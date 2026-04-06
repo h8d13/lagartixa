@@ -27,7 +27,7 @@ jobs:
 
       - name: Create release archive
         run: |
-          tar -czf ${{ env.VER }}-${{ env.REV }}-${{ env.TAG }}.tar.gz \
+          tar -czf ${{ env.VER }}-${{ env.REV }}.tar.gz \
             klartix.sh default.conf bootstrap/ src/ LICENSE README.md
 
       - name: Publish release

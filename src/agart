@@ -1,7 +1,12 @@
 #!/bin/bash
 # shellcheck disable=SC2068,SC2145
-
 [ "$(id -u)" -eq 0 ] && echo "Should not be run as root." && exit 1
 dir=$(dirname "$(readlink -f "$0")")
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    ls -1 "$dir/lixa/"
+    exit 0
+fi
+
 exec "$dir/lixa/$@"
-# thin wrapper only checks userspace, scripts themselves should handle elev
+# thin wrapper only checks userspace, lists scripts with help, scripts themselves should handle elev IF needed

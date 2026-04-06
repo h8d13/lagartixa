@@ -1,0 +1,4 @@
+#!/bin/bash
+[ "$(id -u)" -eq 0 ] && echo "Should not be run as root." && exit 1
+exec ./lixa/"$*"
+# thin wrapper only checks userspace, scripts themselves should handle elev

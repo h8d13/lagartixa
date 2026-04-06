@@ -265,7 +265,7 @@ main() {
 	[[ -z "$DOWNLOAD_DIR" ]] && DOWNLOAD_DIR=$(mktemp -d)
 	mkdir -p "$DOWNLOAD_DIR"
 	# SC2173: KILL cannot be trapped, removed; EXIT handles cleanup
-	# shellcheck disable=SC2064 -- intentional: DOWNLOAD_DIR is local, must expand at trap-set time before main() returns
+	# shellcheck disable=SC2064
 	[[ -z "$PRESERVE_DOWNLOAD_DIR" ]] && trap "rm -rf '$DOWNLOAD_DIR'" TERM EXIT
 	debug "destination directory: $DEST"
 	debug "system repository: $SYSTEM_REPO"

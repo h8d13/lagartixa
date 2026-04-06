@@ -50,4 +50,4 @@ echo "[3/3] Launching klartix installer enter '$LOOP_DEV' as target disk"
 echo ""
 bash "$SCRIPT_DIR/klartix.sh"
 
-chmod 644 "$IMAGE_FILE" 
+chmod 644 "$IMAGE_FILE"

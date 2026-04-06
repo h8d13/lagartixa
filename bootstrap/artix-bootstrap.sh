@@ -249,7 +249,7 @@ main() {
 	}
 
 	[[ -z "$INIT" ]] && INIT="openrc"
-	[[ -z "$SEAT_MGR" ]] && SEAT_MGR="seatd"
+	[[ -z "$SEAT_MGR" ]] && SEAT_MGR="elogind"
 	[[ -z "$ARCH" ]] && ARCH="x86_64"
 	[[ -z "$REPO_URL" ]] && REPO_URL=$(get_default_repo "$ARCH")
 
@@ -284,7 +284,7 @@ main() {
 	install_pacman_packages "${BASIC_PACKAGES[*]}" "$DEST" "$DOWNLOAD_DIR" "$SYSTEM_LIST" "$WORLD_LIST" "$GALAXY_LIST"
 	configure_pacman "$DEST" "$ARCH"
 	configure_minimal_system "$DEST"
-	install_packages "$ARCH" "$DEST" "${SEAT_MGR}-${INIT}" # pin init-logind provider before base resolves it
+	install_packages "$ARCH" "$DEST" "${SEAT_MGR}-${INIT}" # pin seatmgr-init provider before base resolves it
 	install_packages "$ARCH" "$DEST" "base ${INIT}"        # removed elogind to give choice ie seatd
 	install_packages "$ARCH" "$DEST" "artix-keyring"
 	configure_pacman "$DEST" "$ARCH" # Pacman must be re-configured

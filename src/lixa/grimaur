@@ -1101,24 +1101,49 @@ def collect_missing_official_packages(
     return missing_official, unresolved
 
 
+def is_systemd() -> bool:
+    return shutil.which("systemctl") is not None
+
+
 def check_systemd_compat(
-    package: str, deps: DependencySet, package_dir: Path, *, noconfirm: bool
+    package: str, deps: DependencySet, package_dir: Path | None, *, noconfirm: bool
 ) -> bool:
     """Check for systemd dependencies that may not work on non-systemd systems.
     Returns False if the user chooses to abort.
     """
+    if is_systemd():
+        return True
     warnings: list[tuple[str, str]] = []
 
-    if "systemd" in (deps.depends | deps.makedepends):
+    SYSTEMD_PKGS = {
+        "systemd",
+        "libsystemd",
+        "lib32-systemd",
+        "systemd-libs",
+        "systemd-compat",
+        "systemd-sysvcompat",
+        "systemd-resolvconf",
+        "systemd-networkd",
+    }
+
+    to_scan: list[Path] = []
+    pkgbuild_text = ""
+    if package_dir is not None:
+        to_scan = list(package_dir.glob("*.install"))
+        pkgbuild = package_dir / "PKGBUILD"
+        if pkgbuild.exists():
+            to_scan.append(pkgbuild)
+        pkgbuild_text = "".join(f.read_text(errors="replace") for f in to_scan)
+
+    all_deps = deps.depends | deps.makedepends
+    matched = (SYSTEMD_PKGS & all_deps) | {pkg for pkg in SYSTEMD_PKGS if pkg in pkgbuild_text}
+
+    if matched:
         warnings.append(
-            (RED, "hard dependency on 'systemd' will not work on non-systemd systems")
+            (RED, f"hard dependency on {matched} will not work on non-systemd systems")
         )
 
-    to_scan = list(package_dir.glob("*.install"))
-    pkgbuild = package_dir / "PKGBUILD"
-    if pkgbuild.exists():
-        to_scan.append(pkgbuild)
-    if to_scan and any("systemctl" in f.read_text(errors="replace") for f in to_scan):
+    if to_scan and "systemctl" in pkgbuild_text:
         warnings.append(
             (
                 YELLOW,
@@ -1239,6 +1264,10 @@ def install_package(
     else:
         print(f"==> {package}")
 
+    if not check_systemd_compat(package, deps, package_dir, noconfirm=noconfirm):
+        print(f"Skipping {package}.")
+        return
+
     missing_official: set[str] = set()
     aur_dependencies: set[str] = set()
     unresolved: set[str] = set()
@@ -1311,10 +1340,6 @@ def install_package(
             raise GrimaurError(
                 f"PKGBUILD not found at {package_dir / 'PKGBUILD'} - package may be a split package or have an invalid AUR entry"
             )
-
-    if not check_systemd_compat(package, deps, package_dir, noconfirm=noconfirm):
-        print(f"Skipping {package}.")
-        return
 
     build_and_install(package_dir, noconfirm=noconfirm, refresh=refresh)
 

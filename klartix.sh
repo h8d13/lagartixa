@@ -516,6 +516,7 @@ run_chroot "$TARGET_MOUNT" /bin/bash /configure.sh
 
 if [ "${GRIMAUR:-0}" = "1" ]; then
 	show_progress "Deploying grimaur..."
+	# shellcheck disable=SC2086
 	run_chroot "$TARGET_MOUNT" $PM_CMD base-devel git python
 	install -m 755 "$SCRIPT_DIR/src/lixa/grimaur" "$TARGET_MOUNT/usr/local/bin/grimaur"
 	[ "$ELEV" = "doas" ] && run_chroot "$TARGET_MOUNT" \

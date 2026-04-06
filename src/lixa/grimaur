@@ -1105,14 +1105,13 @@ def check_systemd_compat(
     package: str, deps: DependencySet, package_dir: Path, *, noconfirm: bool
 ) -> bool:
     """Check for systemd dependencies that may not work on non-systemd systems.
-
     Returns False if the user chooses to abort.
     """
     warnings: list[tuple[str, str]] = []
 
     if "systemd" in (deps.depends | deps.makedepends):
         warnings.append(
-            (RED, "hard dependency on 'systemd' — will not work on non-systemd systems")
+            (RED, "hard dependency on 'systemd' will not work on non-systemd systems")
         )
 
     to_scan = list(package_dir.glob("*.install"))

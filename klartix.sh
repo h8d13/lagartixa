@@ -295,12 +295,12 @@ BOOTSTRAP="$SCRIPT_DIR/bootstrap/artix-bootstrap.sh"
 show_progress "Bootstrapping $TARGET_INI and $SEAT_MGR"
 if [ -n "$MIRROR_URL" ]; then
 	info "Using mirror: $MIRROR_URL"
-	"$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT" \
-		|| die "Bootstrap failed."
+	"$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT" ||
+		die "Bootstrap failed."
 else
 	info "Using auto mirrors"
-	"$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT" \
-		|| die "Bootstrap failed."
+	"$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT" ||
+		die "Bootstrap failed."
 fi
 
 # FSTAB

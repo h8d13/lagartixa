@@ -452,11 +452,38 @@ mkdir -p /etc/modules-load.d
 echo 'zram' > /etc/modules-load.d/zram.conf
 
 mkdir -p /etc/sysctl.d
-cat > /etc/sysctl.d/99-custom-parameters.conf << SYSCTL
+cat > /etc/sysctl.d/99-lagar.conf << SYSCTL
+kernel.kptr_restrict = 2
+kernel.yama.ptrace_scope = 1
+kernel.sched_autogroup_enabled = 0
 vm.swappiness = $VM_SWAPPINESS
 vm.watermark_boost_factor = $VM_WATERMARK_BOOST
 vm.watermark_scale_factor = $VM_WATERMARK_SCALE
+
+vm.page-cluster = 0
+vm.vfs_cache_pressure = 50
+vm.dirty_ratio = 15
+vm.dirty_background_ratio = 5
+
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 65536 16777216
+net.ipv4.tcp_congestion_control = bbr
+net.core.default_qdisc = fq
+net.ipv4.tcp_fastopen = 3
+net.ipv4.tcp_mtu_probing = 1
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.all.secure_redirects = 0
+net.ipv4.conf.default.secure_redirects = 0
+net.ipv6.conf.all.use_tempaddr = 2
+net.ipv6.conf.default.use_tempaddr = 2
 SYSCTL
+
+[ "$PPD" = "1" ] && install_svc power-profiles-daemon
 
 $PM_CMD $EXTRAS
 

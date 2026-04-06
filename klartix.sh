@@ -215,12 +215,14 @@ read -rp "Begin installation? [y/N]: " confirm
 nlp
 
 # CREDS
-read -rsp "Enter root password: " ROOT_PASSWORD
-nlp
-read -rsp "Confirm root password: " ROOT_PASSWORD_CONFIRM
-nlp
-[ "$ROOT_PASSWORD" != "$ROOT_PASSWORD_CONFIRM" ] && die "Root passwords do not match."
-[ -z "$ROOT_PASSWORD" ] && die "Root password cannot be empty."
+if [ "$LOCK_ROOT" != "1" ]; then
+	read -rsp "Enter root password: " ROOT_PASSWORD
+	nlp
+	read -rsp "Confirm root password: " ROOT_PASSWORD_CONFIRM
+	nlp
+	[ "$ROOT_PASSWORD" != "$ROOT_PASSWORD_CONFIRM" ] && die "Root passwords do not match."
+	[ -z "$ROOT_PASSWORD" ] && die "Root password cannot be empty."
+fi
 
 read -rp "Enter a username: " TARGET_USER
 [ -z "$TARGET_USER" ] && die "Username cannot be empty."
@@ -293,10 +295,12 @@ BOOTSTRAP="$SCRIPT_DIR/bootstrap/artix-bootstrap.sh"
 show_progress "Bootstrapping $TARGET_INI and $SEAT_MGR"
 if [ -n "$MIRROR_URL" ]; then
 	info "Using mirror: $MIRROR_URL"
-	"$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
+	"$BOOTSTRAP" -r "$MIRROR_URL" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT" \
+		|| die "Bootstrap failed."
 else
 	info "Using auto mirrors"
-	"$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT"
+	"$BOOTSTRAP" -i "$TARGET_INI" -s "$SEAT_MGR" "$TARGET_MOUNT" \
+		|| die "Bootstrap failed."
 fi
 
 # FSTAB
@@ -366,7 +370,7 @@ HOSTS
 printf "nameserver $DNS1\nnameserver $DNS2\n" > /etc/resolv.conf
 
 # Root password
-echo "root:$ROOT_PASSWORD" | chpasswd
+[ "$LOCK_ROOT" != "1" ] && echo "root:$ROOT_PASSWORD" | chpasswd
 
 # Kernel, bootloader & base packages
 echo "Installing kernel and base packages..."
@@ -508,15 +512,29 @@ chmod +x "$TARGET_MOUNT/configure.sh"
 show_progress "Executing system configuration in chroot..."
 run_chroot "$TARGET_MOUNT" /bin/bash /configure.sh
 
+if [ "${GRIMAUR:-0}" = "1" ]; then
+	show_progress "Deploying grimaur..."
+	run_chroot "$TARGET_MOUNT" $PM_CMD base-devel git python
+	install -m 755 "$SCRIPT_DIR/src/lixa/grimaur" "$TARGET_MOUNT/usr/local/bin/grimaur"
+	[ "$ELEV" = "doas" ] && run_chroot "$TARGET_MOUNT" \
+		sed -i 's/^#\?PACMAN_AUTH=.*/PACMAN_AUTH=(doas)/' /etc/makepkg.conf
+fi
+
 show_progress "Cleaning up configuration script..."
 rm "$TARGET_MOUNT/configure.sh"
+
+INSTALL_OK=1
 
 show_progress "Syncing and unmounting..."
 sync
 umount -R "$TARGET_MOUNT" 2>/dev/null || umount -Rl "$TARGET_MOUNT" 2>/dev/null || true
 
 nlp
-reop "=== Klartix installation complete! ==="
-reop "You can now reboot into your new Artix Linux system."
-info "Init:  $TARGET_INI"
-info "User:  $TARGET_USER"
+if [ "${INSTALL_OK:-0}" -eq 1 ]; then
+	reop "=== Klartix installation complete! ==="
+	reop "You can now reboot into your new Artix Linux system."
+	info "Init:  $TARGET_INI"
+	info "User:  $TARGET_USER"
+else
+	warn "Installation finished with errors. Review the output above and report https://github.com/h8d13/lagartixa."
+fi

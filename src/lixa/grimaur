@@ -1117,6 +1117,12 @@ def check_systemd_compat(
 
     SYSTEMD_PKGS = {
         "systemd",
+        "timedatectl",
+        "systemctl",
+        "localectl",
+        "timedatectl",
+        "systemd-detect-virt",
+        "python-systemd",
         "libsystemd",
         "lib32-systemd",
         "systemd-libs",
@@ -1136,7 +1142,9 @@ def check_systemd_compat(
         pkgbuild_text = "".join(f.read_text(errors="replace") for f in to_scan)
 
     all_deps = deps.depends | deps.makedepends
-    matched = (SYSTEMD_PKGS & all_deps) | {pkg for pkg in SYSTEMD_PKGS if pkg in pkgbuild_text}
+    matched = (SYSTEMD_PKGS & all_deps) | {
+        pkg for pkg in SYSTEMD_PKGS if pkg in pkgbuild_text
+    }
 
     if matched:
         warnings.append(

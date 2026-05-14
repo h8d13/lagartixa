@@ -437,18 +437,6 @@ case "$NETWORK" in
             printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi-backend.conf
         fi
         ;;
-    iwd-only)
-        # iwd handles WiFi and ethernet with native DHCP
-        install_svc iwd
-        mkdir -p /etc/iwd
-        cat > /etc/iwd/main.conf << IWD
-[General]
-EnableNetworkConfiguration=true
-
-[Network]
-NameResolvingService=resolvconf
-IWD
-        ;;
     iwd-dhcpc)
         # iwd handles WiFi only, dhcpcd covers ethernet
         install_svc iwd

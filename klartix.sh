@@ -440,7 +440,6 @@ case "$NETWORK" in
     iwd-only)
         # iwd handles WiFi and ethernet with native DHCP
         install_svc iwd
-        $PM_CMD openresolv
         mkdir -p /etc/iwd
         cat > /etc/iwd/main.conf << IWD
 [General]

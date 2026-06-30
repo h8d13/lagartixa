@@ -1,6 +1,6 @@
 # Lagartixa
 
-[`Lagartixa`](./klartix.sh) is a single-script, config-driven stage 1+2 installer for [Artix Linux](https://artixlinux.org/).
+[`Lagartixa`](./klartix.sh) is a config-driven stage 1+2 installer for [Artix Linux](https://artixlinux.org/).
 
 Wraps and modifies [`artix-bootstrap`](https://gitea.artixlinux.org/artix/artix-bootstrap/) (stage 1) and drives OS to a bootable, login-ready state: partitioning, filesystem, locale, users, seat manager, networking, hardware drivers, bootloader, services, and init system from any running Linux host. **No ISO needed.**
 
@@ -54,6 +54,5 @@ sudo ./klartix.sh
 > Archive mirrors are snapshots (useful for reproducible builds). If you use them, after initial install, update `/etc/pacman.d/mirrorlist` then run `pacman -Syyu`.
 
 Findings made during this project: [See here.](.github/finds.md)
-Notably a patched version of `grimaur` that cheks for `systemd` libs.
 
 ---

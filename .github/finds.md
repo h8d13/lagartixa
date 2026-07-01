@@ -19,9 +19,9 @@ Which I've come to name the 'leftovers'. This in it's essence is anything left i
 But essentially this is often hidden documentation that can get annoying to figure out.
 
 The importance here is order of operations since we cannot do selections in a one shot isntaller.
-So seat manager needs to come before anything else has a chance to try to need `elogind` or a selection prompt.
+So seat manager needs to come before anything else has a chance to try to need `elogind` or when `<pkg>-init` sidecars are pulled in.
 
 ## Swapping out later pieces
 
 There is another dep chain: `NM -> elogind`
-We got rid of it by using `dhcpd` and `iwd` directly + `seatd` and patched said file above
+Got rid of it by using `dhcpd` and `iwd` directly + `seatd` and patched said file above

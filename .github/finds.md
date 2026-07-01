@@ -4,9 +4,6 @@
 
 `elogind` was hardcoded in [official bootstrap](https://gitea.artixlinux.org/artix/artix-bootstrap/src/commit/4f1d56c7aeced69ef94434fe9e9b9bfe94f891d8/artix-bootstrap.sh#L239)
 
-There is another dep chain: `NM -> elogind`
-We got rid of it by using `dhcpd` and `iwd` directly + `seatd` and patched said file above
-
 Patch was simply to pin:
 
 ```bash
@@ -23,3 +20,8 @@ But essentially this is often hidden documentation that can get annoying to figu
 
 The importance here is order of operations since we cannot do selections in a one shot isntaller.
 So seat manager needs to come before anything else has a chance to try to need `elogind` or a selection prompt.
+
+## Swapping out later pieces
+
+There is another dep chain: `NM -> elogind`
+We got rid of it by using `dhcpd` and `iwd` directly + `seatd` and patched said file above
